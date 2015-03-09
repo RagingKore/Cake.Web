@@ -11,6 +11,10 @@ namespace Cake.Web
 
         public string Name { get; set; }
 
+        public string Username { get; set; }
+
+        public string Password { get; set; }
+
         public string ManagedRuntimeVersion { get; set; }
 
         public bool ClassicManagedPipelineMode { get; set; }
