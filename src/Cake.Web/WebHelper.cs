@@ -23,7 +23,7 @@ namespace Cake.Web
             this.log        = log;
         }
 
-        public void CreateSite(SiteSettings settings)
+        public void CreateWebSite(WebSiteSettings settings)
         {
             if(!this.fileSystem.Exist(new DirectoryPath(settings.PhysicalPath)))
             {
@@ -32,6 +32,9 @@ namespace Cake.Web
 
             using (var server = new ServerManager())
             {
+                // delete the application pool if there is already one with the same name
+                CreateApplicationPool(server, settings.ApplicationPool);
+
                 var site = server.Sites.FirstOrDefault(p => p.Name == settings.Name);
 
                 // delete if found
@@ -44,22 +47,71 @@ namespace Cake.Web
                 // create site
                 site = server.Sites.Add(
                     settings.Name,
-                    settings.BindingProtocol,
+                    settings.BindingProtocol.ToString(),
                     settings.BindingInformation, 
                     settings.PhysicalPath);
 
                 // setup site basic settings
                 site.ServerAutoStart = settings.ServerAutoStart;
-                site.ApplicationDefaults.ApplicationPoolName = settings.ApplicationPool;
+                site.ApplicationDefaults.ApplicationPoolName = settings.ApplicationPool.Name;
 
                 // commit changes to server
                 server.CommitChanges();
 
                 // log success
-                this.log.Debug("Site created.");
+                this.log.Debug("Web Site created.");
             }
         }
 
+        public void CreateFtpSite(FtpSiteSettings settings)
+        {
+            if (!this.fileSystem.Exist(new DirectoryPath(settings.PhysicalPath)))
+            {
+                throw new DirectoryNotFoundException(settings.PhysicalPath);
+            }
+
+            using (var server = new ServerManager())
+            {
+                var site = server.Sites.FirstOrDefault(p => p.Name == settings.Name);
+
+                // delete if found
+                if (site != null)
+                {
+                    site.Delete();
+                    this.log.Debug("Site found and deleted.");
+                }
+
+                // create site
+                site = server.Sites.Add(
+                    settings.Name,
+                    settings.BindingProtocol.ToString(),
+                    settings.BindingInformation,
+                    settings.PhysicalPath);
+
+                // setup site basic settings
+                site.ServerAutoStart = settings.ServerAutoStart;
+                site.ApplicationDefaults.ApplicationPoolName = settings.ApplicationPool.Name;
+
+                // setup site authentication mode
+                this.log.Debug("Setting up authentication mode");
+                site.SetAnonymousAuthentication(settings.EnableAnonymousAuthentication);
+                site.SetBasicAuthentication(settings.EnableBasicAuthentication);
+
+                // setup server authentication for site (only when using basic authentication)
+                if(settings.EnableBasicAuthentication)
+                {
+                    this.log.Debug("Setting up user's authorization using basic authentication");
+                    server.SetAuthorization(site.Name, settings.AuthorizationSettings);
+                }
+
+                // commit changes to server
+                server.CommitChanges();
+
+                // log success
+                this.log.Debug("Ftp Site created.");
+            }
+        }
+        
         public bool DeleteSite(string name)
         {
             var deleted = false;
@@ -141,33 +193,38 @@ namespace Cake.Web
             return stopped;
         }
 
+        private void CreateApplicationPool(ServerManager server, ApplicationPoolSettings settings)
+        {
+            var appPool = server.ApplicationPools.FirstOrDefault(p => p.Name == settings.Name);
+
+            // delete if found
+            if (appPool != null)
+            {
+                appPool.Delete();
+                this.log.Debug("Application pool found and deleted.");
+            }
+
+            // create app pool
+            appPool = server.ApplicationPools.Add(settings.Name);
+
+            // setup app pool basic settings
+            appPool.ManagedRuntimeVersion = settings.ManagedRuntimeVersion;
+            appPool.ManagedPipelineMode = settings.ClassicManagedPipelineMode ? ManagedPipelineMode.Classic : ManagedPipelineMode.Integrated;
+            appPool.Enable32BitAppOnWin64 = settings.Enable32BitAppOnWin64;
+            appPool.AutoStart = settings.Autostart;
+
+            // log success
+            this.log.Debug("Application pool created.");
+        }
+        
         public void CreateApplicationPool(ApplicationPoolSettings settings)
         {
             using (var server = new ServerManager())
             {
-                var appPool = server.ApplicationPools.FirstOrDefault(p => p.Name == settings.Name);
-
-                // delete if found
-                if (appPool != null)
-                {
-                    appPool.Delete();
-                    this.log.Debug("Application pool found and deleted.");
-                }
-
-                // create app pool
-                appPool = server.ApplicationPools.Add(settings.Name);
-
-                // setup app pool basic settings
-                appPool.ManagedRuntimeVersion = settings.ManagedRuntimeVersion;
-                appPool.ManagedPipelineMode   = settings.ClassicManagedPipelineMode ? ManagedPipelineMode.Classic : ManagedPipelineMode.Integrated;
-                appPool.Enable32BitAppOnWin64 = settings.Enable32BitAppOnWin64;
-                appPool.AutoStart             = settings.Autostart;
+                CreateApplicationPool(server, settings);
 
                 // commit changes to server
                 server.CommitChanges();
-
-                // log success
-                this.log.Debug("Application pool created.");
             }
         }
 

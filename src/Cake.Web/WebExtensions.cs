@@ -7,11 +7,11 @@ namespace Cake.Web
     public static class WebExtensions
     {
         [CakeMethodAlias]
-        public static void CreateSite(this ICakeContext context, string name, string physicalPath)
+        public static void CreateWebSite(this ICakeContext context, string name, string physicalPath)
         {
             WebHelper
                .Using(context)
-               .CreateSite(new SiteSettings
+               .CreateWebSite(new WebSiteSettings
                {
                    Name         = name,
                    PhysicalPath = physicalPath,
@@ -19,24 +19,27 @@ namespace Cake.Web
         }
 
         [CakeMethodAlias]
-        public static void CreateSite(this ICakeContext context, string name, string physicalPath, string applicationPool)
+        public static void CreateWebSite(this ICakeContext context, string name, string physicalPath, string applicationPoolName)
         {
             WebHelper
                 .Using(context)
-                .CreateSite(new SiteSettings
+                .CreateWebSite(new WebSiteSettings
                 {
                     Name            = name, 
                     PhysicalPath    = physicalPath, 
-                    ApplicationPool = applicationPool
+                    ApplicationPool = new ApplicationPoolSettings
+                    {
+                        Name = applicationPoolName
+                    } 
                 });
         }
 
         [CakeMethodAlias]
-        public static void CreateSite(this ICakeContext context, SiteSettings settings)
+        public static void CreateWebSite(this ICakeContext context, WebSiteSettings settings)
         {
             WebHelper
                 .Using(context)
-                .CreateSite(settings);
+                .CreateWebSite(settings);
         }
 
         [CakeMethodAlias]

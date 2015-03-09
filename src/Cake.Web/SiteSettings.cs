@@ -5,7 +5,7 @@
         public SiteSettings()
         {
             // defaults
-            BindingProtocol = "http";
+            BindingProtocol = BindingProtocol.Http;
             IpAddress       = "*";
             Port            = 80;
             Host            = "*";
@@ -14,7 +14,7 @@
 
         public string Name { get; set; }
 
-        public string BindingProtocol { get; set; }
+        public BindingProtocol BindingProtocol { get; set; }
 
         public string PhysicalPath { get; set; }
 
@@ -26,7 +26,7 @@
 
         public bool ServerAutoStart { get; set; }
 
-        public string ApplicationPool { get; set; }
+        public ApplicationPoolSettings ApplicationPool { get; set; }
 
         public string BindingInformation { get { return string.Format(@"{0}:{1}:{2}", IpAddress, Port, Host); } }
     }
