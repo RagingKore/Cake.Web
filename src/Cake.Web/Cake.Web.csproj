@@ -47,12 +47,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationPoolSettings.cs" />
+    <Compile Include="AuthorizationSettings.cs" />
+    <Compile Include="AuthorizationType.cs" />
     <Compile Include="BindingProtocol.cs" />
-    <Compile Include="FtpAccessSettings.cs" />
+    <Compile Include="FtpSiteSettings.cs" />
+    <Compile Include="ServerManagerExtensions.cs" />
+    <Compile Include="SiteExtensions.cs" />
     <Compile Include="WebExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SiteSettings.cs" />
     <Compile Include="WebHelper.cs" />
+    <Compile Include="WebSiteSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
