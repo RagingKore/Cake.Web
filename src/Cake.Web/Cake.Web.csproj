@@ -52,7 +52,7 @@
     <Compile Include="BindingProtocol.cs" />
     <Compile Include="FtpSiteSettings.cs" />
     <Compile Include="ServerManagerExtensions.cs" />
-    <Compile Include="SiteExtensions.cs" />
+    <Compile Include="FtpSiteExtensions.cs" />
     <Compile Include="WebExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SiteSettings.cs" />

@@ -2,7 +2,7 @@
 
 namespace Cake.Web
 {
-    public static class SiteExtensions
+    public static class FtpSiteExtensions
     {
         public static void SetAnonymousAuthentication(this Site site, bool anonymousAuthenticationEnabled)
         {
