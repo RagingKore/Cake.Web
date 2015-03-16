@@ -4,7 +4,7 @@ namespace Cake.Web
     {
         public ApplicationPoolSettings()
         {
-            // defaults
+            Name                  = "ASP.NET v4.0";
             ManagedRuntimeVersion = "v4.0";
             Autostart             = true;
         }

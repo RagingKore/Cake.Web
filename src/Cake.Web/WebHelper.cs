@@ -1,287 +1,403 @@
-using System.IO;
+using System;
 using System.Linq;
+using Cake.Common.Diagnostics;
+using Cake.Common.IO;
 using Cake.Core;
 using Cake.Core.Diagnostics;
-using Cake.Core.IO;
 using Microsoft.Web.Administration;
 
 namespace Cake.Web
 {
-    internal sealed class WebHelper
+    public class ApplicationPoolHelper
     {
-        private readonly IFileSystem fileSystem;
+        private static readonly string[] ApplicationPoolBlackList =
+        {
+            "DefaultAppPool",
+            "Classic .NET AppPool",
+            "ASP.NET v4.0 Classic",
+            "ASP.NET v4.0"
+        };
+
+        private readonly ServerManager server;
         private readonly ICakeLog log;
 
-        public static WebHelper Using(ICakeContext context)
+        public ApplicationPoolHelper(ServerManager server, ICakeLog log)
         {
-            return new WebHelper(context.FileSystem, context.Log);
+            this.server = server;
+            this.log    = log;
         }
 
-        internal WebHelper(IFileSystem fileSystem, ICakeLog log)
+        public static ApplicationPoolHelper Using(ServerManager server, ICakeLog log)
         {
-            this.fileSystem = fileSystem;
-            this.log        = log;
+            return new ApplicationPoolHelper(server, log);
         }
 
-        public void CreateWebSite(WebSiteSettings settings)
+        public void Create(ApplicationPoolSettings settings, bool overwrite = false)
         {
-            if(!this.fileSystem.Exist(new DirectoryPath(settings.PhysicalPath)))
-            {
-                throw new DirectoryNotFoundException(settings.PhysicalPath); 
-            }
+            if(settings == null) 
+                throw new ArgumentNullException("settings");
 
-            using (var server = new ServerManager())
-            {
-                // delete the application pool if there is already one with the same name
-                CreateApplicationPool(server, settings.ApplicationPool);
+            if(string.IsNullOrWhiteSpace(settings.Name)) 
+                throw new ArgumentException("Application pool name cannot be null!");
 
-                var site = server.Sites.FirstOrDefault(p => p.Name == settings.Name);
+            if(this.IsSystemDefault(settings.Name)) return;
 
-                // delete if found
-                if(site != null)
-                {
-                    site.Delete();
-                    this.log.Debug("Site found and deleted.");
-                }
+            if(overwrite) this.Delete(settings.Name);
+            
+            var pool = this.server.ApplicationPools.Add(settings.Name);
 
-                // create site
-                site = server.Sites.Add(
-                    settings.Name,
-                    settings.BindingProtocol.ToString(),
-                    settings.BindingInformation, 
-                    settings.PhysicalPath);
+            pool.AutoStart             = settings.Autostart;
+            pool.Enable32BitAppOnWin64 = settings.Enable32BitAppOnWin64;
+            pool.ManagedRuntimeVersion = settings.ManagedRuntimeVersion;
+            pool.ManagedPipelineMode   = settings.ClassicManagedPipelineMode
+                ? ManagedPipelineMode.Classic
+                : ManagedPipelineMode.Integrated;
 
-                // setup site basic settings
-                site.ServerAutoStart = settings.ServerAutoStart;
-                site.ApplicationDefaults.ApplicationPoolName = settings.ApplicationPool.Name;
-
-                // commit changes to server
-                server.CommitChanges();
-
-                // log success
-                this.log.Debug("Web Site created.");
-            }
-        }
-
-        public void CreateFtpSite(FtpSiteSettings settings)
-        {
-            if (!this.fileSystem.Exist(new DirectoryPath(settings.PhysicalPath)))
-            {
-                throw new DirectoryNotFoundException(settings.PhysicalPath);
-            }
-
-            using (var server = new ServerManager())
-            {
-                var site = server.Sites.FirstOrDefault(p => p.Name == settings.Name);
-
-                // delete if found
-                if (site != null)
-                {
-                    site.Delete();
-                    this.log.Debug("Site found and deleted.");
-                }
-
-                // create site
-                site = server.Sites.Add(
-                    settings.Name,
-                    settings.BindingProtocol.ToString(),
-                    settings.BindingInformation,
-                    settings.PhysicalPath);
-
-                // setup site basic settings
-                site.ServerAutoStart = settings.ServerAutoStart;
-                site.ApplicationDefaults.ApplicationPoolName = settings.ApplicationPool.Name;
-
-                // setup site authentication mode
-                this.log.Debug("Setting up authentication mode");
-                site.SetAnonymousAuthentication(settings.EnableAnonymousAuthentication);
-                site.SetBasicAuthentication(settings.EnableBasicAuthentication);
-
-                // setup server authentication for site (only when using basic authentication)
-                if(settings.EnableBasicAuthentication)
-                {
-                    this.log.Debug("Setting up user's authorization using basic authentication");
-                    server.SetAuthorization(site.Name, settings.AuthorizationSettings);
-                }
-
-                // commit changes to server
-                server.CommitChanges();
-
-                // log success
-                this.log.Debug("Ftp Site created.");
-            }
-        }
-        
-        public bool DeleteSite(string name)
-        {
-            var deleted = false;
-
-            using (var server = new ServerManager())
-            {
-                var site = server.Sites.FirstOrDefault(p => p.Name == name);
-
-                if (site != null)
-                {
-                    site.Delete();
-                    server.CommitChanges();
-                    deleted = true;
-                    this.log.Debug("Site deleted.");
-                }
-                else
-                {
-                    this.log.Debug("Site not found.");
-                }
-            }
-
-            return deleted;
-        }
-
-        public bool CheckSite(string name)
-        {
-            using (var server = new ServerManager())
-            {
-                return server.Sites
-                    .SingleOrDefault(p => p.Name == name) != null;
-            }
-        }
-
-        public bool StartSite(string name)
-        {
-            var started = false;
-
-            using (var server = new ServerManager())
-            {
-                var site = server.Sites.FirstOrDefault(p => p.Name == name);
-
-                if (site != null)
-                {
-                    site.Start();
-                    server.CommitChanges();
-                    started = true;
-                    this.log.Debug("Site started.");
-                }
-                else
-                {
-                    this.log.Debug("Site not found.");
-                }
-            }
-
-            return started;
-        }
-
-        public bool StopSite(string name)
-        {
-            var stopped = false;
-
-            using (var server = new ServerManager())
-            {
-                var site = server.Sites.FirstOrDefault(p => p.Name == name);
-
-                if (site != null)
-                {
-                    site.Stop();
-                    server.CommitChanges();
-                    stopped = true;
-                    this.log.Debug("Site stopped.");
-                }
-                else
-                {
-                    this.log.Debug("Site not found.");
-                }
-            }
-
-            return stopped;
-        }
-
-        private void CreateApplicationPool(ServerManager server, ApplicationPoolSettings settings)
-        {
-            var appPool = server.ApplicationPools.FirstOrDefault(p => p.Name == settings.Name);
-
-            // delete if found
-            if (appPool != null)
-            {
-                appPool.Delete();
-                this.log.Debug("Application pool found and deleted.");
-            }
-
-            // create app pool
-            appPool = server.ApplicationPools.Add(settings.Name);
-
-            // setup app pool basic settings
-            appPool.ManagedRuntimeVersion = settings.ManagedRuntimeVersion;
-            appPool.ManagedPipelineMode = settings.ClassicManagedPipelineMode ? ManagedPipelineMode.Classic : ManagedPipelineMode.Integrated;
-            appPool.Enable32BitAppOnWin64 = settings.Enable32BitAppOnWin64;
-            appPool.AutoStart = settings.Autostart;
-
-            // log success
             this.log.Debug("Application pool created.");
         }
-        
-        public void CreateApplicationPool(ApplicationPoolSettings settings)
-        {
-            using (var server = new ServerManager())
-            {
-                CreateApplicationPool(server, settings);
 
-                // commit changes to server
+        public void Delete(string name)
+        {
+            if(!this.IsSystemDefault(name))
+            {
+                var pool = this.server.ApplicationPools
+                    .FirstOrDefault(p => p.Name == name);
+
+                if(pool == null)
+                    this.log.Debug("Application pool '{0}' not found.", name);
+                else
+                {
+                    this.server.ApplicationPools.Remove(pool);
+                    this.log.Debug("Application pool '{0}' deleted.", pool.Name);
+                }
+            }
+        }
+
+        public void Recycle(string name)
+        {
+            var pool = this.server.ApplicationPools
+                .FirstOrDefault(p => p.Name == name);
+
+            if(pool == null)
+                this.log.Debug("Application pool '{0}' not found.", name);
+            else
+            {
+                pool.Recycle();
+                this.log.Debug("Application pool '{0}' recycled.", pool.Name);
+            }
+        }
+
+        public bool Check(string name)
+        {
+            return this.server.ApplicationPools
+                .SingleOrDefault(p => p.Name == name) != null;
+        }
+
+        public bool IsSystemDefault(string name)
+        {
+            if(!ApplicationPoolBlackList.Contains(name)) return true;
+            this.log.Debug("Application pool '{0}' is system's default.", name);
+            return false;
+        }
+    }
+
+    public abstract class SiteHelperBase
+    {
+        public readonly ServerManager Server;
+        public readonly ICakeLog Log;
+
+        protected SiteHelperBase(ServerManager server, ICakeLog log)
+        {
+            this.Server     = server;
+            this.Log        = log;
+        }
+
+        public void Delete(string name)
+        {
+            var site = this.Server.Sites
+                .FirstOrDefault(p => p.Name == name);
+
+            if(site == null)
+                this.Log.Debug("Site '{0}' not found.", name);
+            else
+            {
+                this.Server.Sites.Remove(site);
+                this.Log.Debug("Site '{0}' deleted.", site.Name);
+            }
+        }
+
+        public void Start(string name)
+        {
+            var site = Server.Sites
+                .FirstOrDefault(p => p.Name == name);
+
+            if(site != null)
+            {
+                ObjectState state;
+                do
+                {
+                    this.Log.Verbose("Site '{0}' starting...", site.Name);
+                    state = site.Start();   
+                }
+                while(state != ObjectState.Started);
+
+                this.Log.Debug("Site '{0}' started.", site.Name);
+            }
+        }
+
+        public void Stop(string name)
+        {
+            var site = Server.Sites
+                .FirstOrDefault(p => p.Name == name);
+
+            if(site != null)
+            {
+                ObjectState state;
+                do
+                {
+                    this.Log.Verbose("Site '{0}' stopping...", site.Name);
+                    state = site.Start();
+                }
+                while(state != ObjectState.Stopped);
+
+                this.Log.Debug("Site '{0}' stopped.", site.Name);
+            }
+        }
+
+        public bool Check(string name)
+        {
+            return this.Server.Sites
+                .SingleOrDefault(p => p.Name == name) != null;
+        }
+    }
+
+    public class WebSiteHelper : SiteHelperBase
+    {
+        public WebSiteHelper(ServerManager server, ICakeLog log)
+            : base(server, log)
+        {
+        }
+
+        public static WebSiteHelper Using(ServerManager server, ICakeLog log)
+        {
+            return new WebSiteHelper(server, log);
+        }
+
+        public void Create(WebSiteSettings settings, bool overwrite = false)
+        {
+            if(settings == null)
+                throw new ArgumentNullException("settings");
+
+            if(string.IsNullOrWhiteSpace(settings.Name))
+                throw new ArgumentException("Site name cannot be null!");
+
+            if(string.IsNullOrWhiteSpace(settings.HostName))
+                throw new ArgumentException("Host name cannot be null!");
+
+            var site = Server.Sites.FirstOrDefault(p => p.Name == settings.Name);
+
+            if(site != null)
+            {
+                Log.Debug("Site '{0}' already exists.", settings.Name);
+
+                if(overwrite)
+                {
+                    Log.Debug("Site '{0}' will be overriden by request.", settings.Name);
+
+                    Delete(settings.Name);
+
+                    ApplicationPoolHelper
+                        .Using(Server, Log)
+                        .Create(settings.ApplicationPool, true);
+                }
+            }
+
+            site = Server.Sites.Add(
+                settings.Name,
+                settings.BindingProtocol.ToString().ToLower(),
+                settings.BindingInformation,
+                settings.PhysicalPath);
+
+            site.ServerAutoStart = settings.ServerAutoStart;
+            site.ApplicationDefaults.ApplicationPoolName = settings.ApplicationPool.Name;
+
+            if(settings.Authentication != null)
+            {
+                // Anonymous Authentication
+                var anonymousAuthentication = site
+                    .GetChildElement("system.webServer")
+                    .GetChildElement("security")
+                    .GetChildElement("authentication")
+                    .GetChildElement("anonymousAuthentication");
+
+                anonymousAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableAnonymousAuthentication);
+                anonymousAuthentication.SetAttributeValue("userName", settings.Authentication.Username);
+                anonymousAuthentication.SetAttributeValue("password", settings.Authentication.Password);
+
+                Log.Debug("Anonymous Authentication enabled: {0}", settings.Authentication.EnableAnonymousAuthentication);
+
+
+                // Basic Authentication
+                var basicAuthentication = site
+                    .GetChildElement("system.webServer")
+                    .GetChildElement("security")
+                    .GetChildElement("authentication")
+                    .GetChildElement("basicAuthentication");
+
+                basicAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableBasicAuthentication);
+
+                Log.Debug("Basic Authentication enabled: {0}", settings.Authentication.EnableBasicAuthentication);
+
+                // Windows Authentication
+                var windowsAuthentication = site
+                    .GetChildElement("system.webServer")
+                    .GetChildElement("security")
+                    .GetChildElement("authentication")
+                    .GetChildElement("windowsAuthentication");
+
+                windowsAuthentication.SetAttributeValue("enabled", true);
+
+                Log.Debug("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
+            }
+
+            Log.Debug("Web Site '{0}' created.", settings.Name);
+        }
+    }
+
+    public class FtpSiteHelper : SiteHelperBase
+    {
+        public FtpSiteHelper(ServerManager server, ICakeLog log)
+            : base(server, log)
+        {
+        }
+
+        public static FtpSiteHelper Using(ServerManager server, ICakeLog log)
+        {
+            return new FtpSiteHelper(server, log);
+        }
+
+        public void Create(FtpSiteSettings settings, bool overwrite = false)
+        {
+            if(settings == null)
+                throw new ArgumentNullException("settings");
+
+            if(string.IsNullOrWhiteSpace(settings.Name))
+                throw new ArgumentException("Site name cannot be null!");
+
+            if(string.IsNullOrWhiteSpace(settings.HostName))
+                throw new ArgumentException("Host name cannot be null!");
+
+            var site = Server.Sites.FirstOrDefault(p => p.Name == settings.Name);
+
+            if(site != null)
+            {
+                Log.Debug("Site '{0}' already exists.", settings.Name);
+
+                if(overwrite)
+                {
+                    Log.Debug("Site '{0}' will be overriden by request.", settings.Name);
+
+                    Delete(settings.Name);
+
+                    ApplicationPoolHelper
+                        .Using(Server, Log)
+                        .Create(settings.ApplicationPool, true);
+                }
+            }
+
+            site = Server.Sites.Add(
+                settings.Name,
+                settings.BindingProtocol.ToString().ToLower(),
+                settings.BindingInformation,
+                settings.PhysicalPath);
+
+            site.ServerAutoStart                         = settings.ServerAutoStart;
+            site.ApplicationDefaults.ApplicationPoolName = settings.ApplicationPool.Name;
+
+            Log.Verbose("Setting up authentication mode...");
+            site.SetAnonymousAuthentication(settings.EnableAnonymousAuthentication);
+            site.SetBasicAuthentication(settings.EnableBasicAuthentication);
+
+            if(settings.EnableBasicAuthentication)
+            {
+                Log.Verbose("Setting up user's authorization using basic authentication...");
+                Server.SetAuthorization(site.Name, settings.AuthorizationSettings);
+            }
+
+            Log.Debug("Ftp Site '{0}' created.", settings.Name);
+        }
+    }
+
+    public sealed class WebHelper
+    {
+        private readonly ICakeContext cake;
+ 
+        public WebHelper(ICakeContext cake)
+        {
+            this.cake = cake;
+        }
+
+        public static WebHelper Using(ICakeContext cake)
+        {
+            return new WebHelper(cake);
+        }
+
+        public void DeployWebSite(WebSiteSettings settings, string sourcePath = null)
+        {
+            if(settings == null) throw new ArgumentNullException("settings");
+
+            PrepareDeploymentFolder(settings, sourcePath);
+
+            using(var server = new ServerManager())
+            {
+                WebSiteHelper
+                    .Using(server, this.cake.Log)
+                    .Create(settings, true);
+
                 server.CommitChanges();
+
+                this.cake.Information("Web Site '{0}' deployed.", settings.Name);
             }
         }
 
-        public bool DeleteApplicationPool(string name)
+        public void DeployFtpSite(FtpSiteSettings settings, string sourcePath = null)
         {
-            var deleted = false;
+            if(settings == null) throw new ArgumentNullException("settings");
+
+            PrepareDeploymentFolder(settings, sourcePath);
 
             using (var server = new ServerManager())
             {
-                var appPool = server.ApplicationPools.FirstOrDefault(p => p.Name == name);
+                FtpSiteHelper
+                    .Using(server, this.cake.Log)
+                    .Create(settings, true);
 
-                if (appPool != null)
+                server.CommitChanges();
+
+                this.cake.Information("Ftp Site '{0}' deployed.", settings.Name);
+            }
+        }
+
+        private void PrepareDeploymentFolder(SiteSettings settings, string sourcePath = null)
+        {
+            if(settings == null) throw new ArgumentNullException("settings");
+
+            if(!string.IsNullOrWhiteSpace(sourcePath))
+            {
+                if(this.cake.DirectoryExists(settings.PhysicalPath))
                 {
-                    appPool.Delete();
-                    server.CommitChanges();
-                    deleted = true;
-                    this.log.Debug("Application pool deleted.");
+                    this.cake.CleanDirectory(settings.PhysicalPath);
+                    this.cake.Information("Deployment folder cleaned.");
                 }
                 else
                 {
-                    this.log.Debug("Application pool not found.");
+                    this.cake.CreateDirectory(settings.PhysicalPath);
+                    this.cake.Information("Deployment folder created.");
                 }
-            }
 
-            return deleted;
-        }
-
-        public bool RecycleApplicationPool(string name)
-        {
-            var recycled = false;
-
-            using (var server = new ServerManager())
-            {
-                var appPool = server.ApplicationPools.FirstOrDefault(p => p.Name == name);
-
-                if (appPool != null)
-                {
-                    appPool.Delete();
-                    server.CommitChanges();
-                    recycled = true;
-                    this.log.Debug("Application pool recycled.");
-                }
-                else
-                {
-                    this.log.Debug("Application pool not found.");
-                }
-            }
-
-            return recycled;
-        }
-
-        public bool CheckApplicationPool(string name)
-        {
-            using (var server = new ServerManager())
-            {
-                return server.ApplicationPools
-                    .SingleOrDefault(p => p.Name == name) != null;
+                this.cake.Debug("Copying files to deployment folder...");
+                this.cake.CopyFiles(sourcePath + "*.*", settings.PhysicalPath);
+                this.cake.Information("Files copied to deployment folder.");      
             }
         }
     }
