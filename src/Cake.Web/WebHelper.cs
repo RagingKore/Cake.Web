@@ -225,7 +225,7 @@ namespace Cake.Web
             {
                 // Anonymous Authentication
                 var anonymousAuthentication = site
-                    .GetChildElement("system.webServer")
+                    .GetChildElement("webServer")
                     .GetChildElement("security")
                     .GetChildElement("authentication")
                     .GetChildElement("anonymousAuthentication");
@@ -239,7 +239,7 @@ namespace Cake.Web
 
                 // Basic Authentication
                 var basicAuthentication = site
-                    .GetChildElement("system.webServer")
+                    .GetChildElement("webServer")
                     .GetChildElement("security")
                     .GetChildElement("authentication")
                     .GetChildElement("basicAuthentication");
@@ -250,7 +250,7 @@ namespace Cake.Web
 
                 // Windows Authentication
                 var windowsAuthentication = site
-                    .GetChildElement("system.webServer")
+                    .GetChildElement("webServer")
                     .GetChildElement("security")
                     .GetChildElement("authentication")
                     .GetChildElement("windowsAuthentication");
@@ -346,7 +346,22 @@ namespace Cake.Web
         {
             if(settings == null) throw new ArgumentNullException("settings");
 
-            PrepareDeploymentFolder(settings, sourcePath);
+            // Prepare deployment folder
+            if(!this.cake.DirectoryExists(settings.PhysicalPath))
+            {
+                this.cake.CreateDirectory(settings.PhysicalPath);
+                this.cake.Information("Deployment folder created.");
+            }
+
+            if(!string.IsNullOrWhiteSpace(sourcePath))
+            {
+                this.cake.CleanDirectory(settings.PhysicalPath);
+                this.cake.Information("Deployment folder cleaned.");
+
+                this.cake.Debug("Copying files to deployment folder...");
+                this.cake.CopyFiles(sourcePath + "*.*", settings.PhysicalPath);
+                this.cake.Information("Files copied to deployment folder.");
+            }
 
             using(var server = new ServerManager())
             {
@@ -360,11 +375,16 @@ namespace Cake.Web
             }
         }
 
-        public void DeployFtpSite(FtpSiteSettings settings, string sourcePath = null)
+        public void DeployFtpSite(FtpSiteSettings settings)
         {
             if(settings == null) throw new ArgumentNullException("settings");
 
-            PrepareDeploymentFolder(settings, sourcePath);
+            // Prepare deployment folder
+            if(!this.cake.DirectoryExists(settings.PhysicalPath))
+            {
+                this.cake.CreateDirectory(settings.PhysicalPath);
+                this.cake.Information("Deployment folder created.");
+            }
 
             using (var server = new ServerManager())
             {
@@ -375,29 +395,6 @@ namespace Cake.Web
                 server.CommitChanges();
 
                 this.cake.Information("Ftp Site '{0}' deployed.", settings.Name);
-            }
-        }
-
-        private void PrepareDeploymentFolder(SiteSettings settings, string sourcePath = null)
-        {
-            if(settings == null) throw new ArgumentNullException("settings");
-
-            if(!string.IsNullOrWhiteSpace(sourcePath))
-            {
-                if(this.cake.DirectoryExists(settings.PhysicalPath))
-                {
-                    this.cake.CleanDirectory(settings.PhysicalPath);
-                    this.cake.Information("Deployment folder cleaned.");
-                }
-                else
-                {
-                    this.cake.CreateDirectory(settings.PhysicalPath);
-                    this.cake.Information("Deployment folder created.");
-                }
-
-                this.cake.Debug("Copying files to deployment folder...");
-                this.cake.CopyFiles(sourcePath + "*.*", settings.PhysicalPath);
-                this.cake.Information("Files copied to deployment folder.");      
             }
         }
     }

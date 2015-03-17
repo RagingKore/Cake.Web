@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationPoolSettings.cs" />
+    <Compile Include="AuthenticationSettings.cs" />
     <Compile Include="AuthorizationSettings.cs" />
     <Compile Include="AuthorizationType.cs" />
     <Compile Include="BindingProtocol.cs" />

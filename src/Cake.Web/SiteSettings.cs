@@ -13,7 +13,6 @@
             HostName        = "*";
             ServerAutoStart = true;
             ApplicationPool = new ApplicationPoolSettings();
-            Authentication  = new AuthenticationSettings();
         }
 
         public string Name { get; set; }
@@ -46,23 +45,5 @@
         public string BindingInformation { get { return string.Format(@"{0}:{1}:{2}", IpAddress, Port, HostName); } }
 
         public AuthenticationSettings Authentication { get; set; }    
-    }
-
-    public class AuthenticationSettings
-    {
-        public AuthenticationSettings()
-        {
-            EnableAnonymousAuthentication = true;
-        }
-
-        public bool EnableBasicAuthentication { get; set; }
-
-        public bool EnableWindowsAuthentication { get; set; }
-
-        public bool EnableAnonymousAuthentication { get; set; }
-
-        public string Username { get; set; }
-
-        public string Password { get; set; }
     }
 }
