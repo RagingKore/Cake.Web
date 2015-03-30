@@ -7,9 +7,12 @@ namespace Cake.Web
             Name                  = "ASP.NET v4.0";
             ManagedRuntimeVersion = "v4.0";
             Autostart             = true;
+            IdentityType          = ApplicationPoolIdentityType.ApplicationPoolIdentity;
         }
 
         public string Name { get; set; }
+
+        public ApplicationPoolIdentityType IdentityType { get; set; }
 
         public string Username { get; set; }
 

@@ -49,18 +49,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationPoolHelper.cs" />
+    <Compile Include="ApplicationPoolIdentityType.cs" />
     <Compile Include="ApplicationPoolSettings.cs" />
     <Compile Include="AuthenticationSettings.cs" />
     <Compile Include="AuthorizationSettings.cs" />
     <Compile Include="AuthorizationType.cs" />
     <Compile Include="BindingProtocol.cs" />
+    <Compile Include="FtpSiteHelper.cs" />
     <Compile Include="FtpSiteSettings.cs" />
     <Compile Include="ServerManagerExtensions.cs" />
     <Compile Include="FtpSiteExtensions.cs" />
+    <Compile Include="SiteHelperBase.cs" />
     <Compile Include="WebExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SiteSettings.cs" />
     <Compile Include="WebHelper.cs" />
+    <Compile Include="WebSiteHelper.cs" />
     <Compile Include="WebSiteSettings.cs" />
   </ItemGroup>
   <ItemGroup>
