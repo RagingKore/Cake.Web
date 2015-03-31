@@ -62,16 +62,11 @@ namespace Cake.Web
 
             Log.Verbose("Setting up authentication mode...");
             site.SetAnonymousAuthentication(settings.EnableAnonymousAuthentication);
-
-            // basic auth
             site.SetBasicAuthentication(settings.EnableBasicAuthentication);
 
-            if(settings.EnableBasicAuthentication)
-            {
-                Log.Verbose("Setting up user's authorization using basic authentication...");
-                Server.SetAuthorization(site.Name, settings.AuthorizationSettings);
-            }
-            
+            Log.Verbose("Setting up authorization rules...");
+            Server.SetAuthorization(site.Name, settings.AuthorizationSettings);
+
             // SSL policy
             var ssl = site
                 .GetChildElement("ftpServer")
@@ -81,7 +76,6 @@ namespace Cake.Web
             ssl.SetAttributeValue("dataChannelPolicy", "SslAllow");
 
             // Host name support
-
             var hostNameSupport = Server
                 .GetApplicationHostConfiguration()
                 .GetSection("system.ftpServer/serverRuntime")

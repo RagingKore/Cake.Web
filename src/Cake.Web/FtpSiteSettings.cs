@@ -4,9 +4,10 @@
     {
         public FtpSiteSettings()
         {
-            BindingProtocol       = BindingProtocol.Ftp;
-            AuthorizationSettings = new AuthorizationSettings();
-            Port                  = 21;
+            BindingProtocol               = BindingProtocol.Ftp;
+            Port                          = 21;
+            AuthorizationSettings         = new AuthorizationSettings();
+            EnableAnonymousAuthentication = true;
         }
 
         public bool EnableAnonymousAuthentication { get; set; }

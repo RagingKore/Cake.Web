@@ -4,8 +4,9 @@
     {
         public AuthorizationSettings()
         {
-            this.CanRead  = true;
-            this.CanWrite = true;
+            AuthorizationType = AuthorizationType.AllUsers;
+            CanRead           = true;
+            CanWrite          = true;
         }
 
         public AuthorizationType AuthorizationType { get; set; }

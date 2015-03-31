@@ -13,8 +13,8 @@ namespace Cake.Web
                 .GetChildElement("anonymousAuthentication");
 
             authenticationElement.SetAttributeValue(
-                    "enabled",
-                    anonymousAuthenticationEnabled);
+                "enabled",
+                anonymousAuthenticationEnabled);
         }
 
         public static void SetBasicAuthentication(this Site site, bool basicAuthenticationEnabled)
@@ -26,8 +26,8 @@ namespace Cake.Web
                 .GetChildElement("basicAuthentication");
 
             authenticationElement.SetAttributeValue(
-                    "enabled",
-                    basicAuthenticationEnabled);
+                "enabled",
+                basicAuthenticationEnabled);
         }
     }
 }
