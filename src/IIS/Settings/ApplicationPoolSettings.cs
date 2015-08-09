@@ -1,3 +1,9 @@
+#region Using Statements
+    using System;
+#endregion
+
+
+
 namespace Cake.IIS
 {
     public class ApplicationPoolSettings
@@ -62,6 +68,26 @@ namespace Cake.IIS
             public bool ClassicManagedPipelineMode { get; set; }
 
             public bool Enable32BitAppOnWin64 { get; set; }
+
+            public bool LoadUserProfile { get; set; }
+
+            public long MaxProcesses { get; set; }
+
+
+
+            public bool PingingEnabled { get; set; }
+
+            public TimeSpan PingInterval { get; set; }
+
+            public TimeSpan PingResponseTime { get; set; }
+
+
+
+            public TimeSpan IdleTimeout { get; set; }
+
+            public TimeSpan ShutdownTimeLimit { get; set; }
+
+            public TimeSpan StartupTimeLimit { get; set; }
 
 
 

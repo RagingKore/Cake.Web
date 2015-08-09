@@ -1,7 +1,7 @@
 # Cake.IIS
 Cake-Build addin that extends Cake with IIS extensions
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5g0u2757tix9se6f?svg=true)](https://ci.appveyor.com/project/PhillipSharpe/cake-powershell)
+[![Build status](https://ci.appveyor.com/api/projects/status/eqvnf0dk25rqsh44?svg=true)](https://ci.appveyor.com/project/PhillipSharpe/cake-iis)
 
 [![cakebuild.net](https://img.shields.io/badge/WWW-cakebuild.net-blue.svg)](http://cakebuild.net/)
 
@@ -16,6 +16,8 @@ Cake-Build addin that extends Cake with IIS extensions
 * Start Site
 * Stop Site
 * Site Exists
+
+
 
 * Create Applicaiton Pool
 * Delete Pool
@@ -62,14 +64,14 @@ Task("ApplicationPool-Create")
 });
 
 Task("ApplicationPool-Stop")
-    .Description("Stops an ApplicationPool")
+    .Description("Stops a local ApplicationPool")
     .Does(() =>
 {
-    StopPool("remote-server-name", "Production");
+    StopPool("Production");
 });
 
 Task("ApplicationPool-Start")
-    .Description("Starts an ApplicationPool")
+    .Description("Starts a remote ApplicationPool")
     .Does(() =>
 {
     StartPool("remote-server-name", "Production");
@@ -95,17 +97,17 @@ Task("Website-Create")
 });
 
 Task("Website-Stop")
-    .Description("Stops a Website")
+    .Description("Stops a remote Website")
     .Does(() =>
 {
-    StopWebsite("remote-server-name", "Production");
+    StopWebsite("remote-server-name", "MyBlog");
 });
 
 Task("Website-Start")
-    .Description("Starts a Website")
+    .Description("Starts a local Website")
     .Does(() =>
 {
-    StartWebsite("remote-server-name", "Production");
+    StartWebsite("MyBlog");
 });
 
 

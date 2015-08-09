@@ -26,6 +26,146 @@ namespace Cake.IIS
 
 
         #region Functions (4)
+            protected Site CreateSite(SiteSettings settings, out bool exists)
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException("settings");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.Name))
+                {
+                    throw new ArgumentException("Site name cannot be null!");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.HostName))
+                {
+                    throw new ArgumentException("Host name cannot be null!");
+                }
+
+
+
+                //Get Site
+                Site site = this.Server.Sites.FirstOrDefault(p => p.Name == settings.Name);
+
+                if (site != null)
+                {
+                    exists = true;
+                    this.Log.Debug("Site '{0}' already exists.", settings.Name);
+
+                    if (settings.Overwrite)
+                    {
+                        this.Log.Debug("Site '{0}' will be overriden by request.", settings.Name);
+
+                        this.Delete(settings.Name);
+
+                        ApplicationPoolManager
+                            .Using(this.Server, this.Log)
+                            .Delete(site.ApplicationDefaults.ApplicationPoolName);
+                    }
+                    else
+                    {
+                        return site;
+                    }
+                }
+                else
+                {
+                    exists = false;
+                }
+
+
+
+                //Create Pool
+                ApplicationPoolManager
+                    .Using(this.Server, this.Log)
+                    .Create(settings.ApplicationPool);
+
+
+
+                //Site Settings
+                site = this.Server.Sites.Add(
+                    settings.Name,
+                    settings.BindingProtocol.ToString().ToLower(),
+                    settings.BindingInformation,
+                    settings.PhysicalPath);
+
+                if (settings.CertificateHash != null)
+                {
+                    site.Bindings[0].CertificateHash = settings.CertificateHash;
+                }
+
+                if (!String.IsNullOrEmpty(settings.CertificateStoreName))
+                {
+                    site.Bindings[0].CertificateStoreName = settings.CertificateStoreName;
+                }
+
+                site.ServerAutoStart = settings.ServerAutoStart;
+                site.ApplicationDefaults.ApplicationPoolName = settings.ApplicationPool.Name;
+
+
+
+                //Set Authentication
+                if (settings.Authentication != null)
+                {
+                    //Get Type
+                    string server = "";
+
+                    if (settings is WebsiteSettings)
+                    {
+                        server = "webServer";
+                    }
+                    else
+                    {
+                        server = "ftpServer";
+                    }
+
+
+
+                    // Anonymous Authentication
+                    var anonymousAuthentication = site
+                        .GetChildElement(server)
+                        .GetChildElement("security")
+                        .GetChildElement("authentication")
+                        .GetChildElement("anonymousAuthentication");
+
+                    anonymousAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableAnonymousAuthentication);
+
+                    this.Log.Debug("Anonymous Authentication enabled: {0}", settings.Authentication.EnableAnonymousAuthentication);
+
+
+
+                    // Basic Authentication
+                    var basicAuthentication = site
+                        .GetChildElement(server)
+                        .GetChildElement("security")
+                        .GetChildElement("authentication")
+                        .GetChildElement("basicAuthentication");
+
+                    basicAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableBasicAuthentication);
+                    basicAuthentication.SetAttributeValue("userName", settings.Authentication.Username);
+                    basicAuthentication.SetAttributeValue("password", settings.Authentication.Password);
+
+                    this.Log.Debug("Basic Authentication enabled: {0}", settings.Authentication.EnableBasicAuthentication);
+
+
+
+                    // Windows Authentication
+                    var windowsAuthentication = site
+                        .GetChildElement(server)
+                        .GetChildElement("security")
+                        .GetChildElement("authentication")
+                        .GetChildElement("windowsAuthentication");
+
+                    windowsAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableWindowsAuthentication);
+
+                    this.Log.Debug("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
+                }
+
+                return site;
+            }
+
+
+
             public bool Delete(string name)
             {
                 var site = this.Server.Sites.FirstOrDefault(p => p.Name == name);

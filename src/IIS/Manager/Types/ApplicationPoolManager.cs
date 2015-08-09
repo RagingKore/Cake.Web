@@ -121,6 +121,20 @@ namespace Cake.IIS
                         throw new ArgumentOutOfRangeException();
                 }
 
+
+
+                //Set ProcessModel
+                pool.ProcessModel.LoadUserProfile = settings.LoadUserProfile;
+                pool.ProcessModel.MaxProcesses = settings.MaxProcesses;
+
+                pool.ProcessModel.PingingEnabled = settings.PingingEnabled;
+                pool.ProcessModel.PingInterval = settings.PingInterval;
+                pool.ProcessModel.PingResponseTime = settings.PingResponseTime;
+
+                pool.ProcessModel.IdleTimeout = settings.IdleTimeout;
+                pool.ProcessModel.ShutdownTimeLimit = settings.ShutdownTimeLimit;
+                pool.ProcessModel.StartupTimeLimit = settings.StartupTimeLimit;
+
                 this.Log.Debug("Application pool created.");
             }
 

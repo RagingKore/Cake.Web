@@ -74,7 +74,21 @@
                 {
                     return string.Format(@"{0}:{1}:{2}", IpAddress, Port, HostName);
                 }
-        }
+            }
+
+
+
+            public byte[] CertificateHash { get; set; }
+
+            public string CertificateStoreName { get; set; }
+
+
+        
+            public bool TraceFailedRequestsEnabled { get; set; }
+
+            public string TraceFailedRequestsDirectory { get; set; }
+
+            public long TraceFailedRequestsMaxLogFiles { get; set; }
 
 
 
