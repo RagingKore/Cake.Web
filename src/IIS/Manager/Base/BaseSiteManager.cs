@@ -25,7 +25,7 @@ namespace Cake.IIS
 
 
 
-        #region Functions (4)
+        #region Functions (9)
             protected Site CreateSite(SiteSettings settings, out bool exists)
             {
                 if (settings == null)
@@ -51,11 +51,11 @@ namespace Cake.IIS
                 if (site != null)
                 {
                     exists = true;
-                    this.Log.Debug("Site '{0}' already exists.", settings.Name);
+                    this.Log.Information("Site '{0}' already exists.", settings.Name);
 
                     if (settings.Overwrite)
                     {
-                        this.Log.Debug("Site '{0}' will be overriden by request.", settings.Name);
+                        this.Log.Information("Site '{0}' will be overriden by request.", settings.Name);
 
                         this.Delete(settings.Name);
 
@@ -130,7 +130,7 @@ namespace Cake.IIS
 
                     anonymousAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableAnonymousAuthentication);
 
-                    this.Log.Debug("Anonymous Authentication enabled: {0}", settings.Authentication.EnableAnonymousAuthentication);
+                    this.Log.Information("Anonymous Authentication enabled: {0}", settings.Authentication.EnableAnonymousAuthentication);
 
 
 
@@ -145,7 +145,7 @@ namespace Cake.IIS
                     basicAuthentication.SetAttributeValue("userName", settings.Authentication.Username);
                     basicAuthentication.SetAttributeValue("password", settings.Authentication.Password);
 
-                    this.Log.Debug("Basic Authentication enabled: {0}", settings.Authentication.EnableBasicAuthentication);
+                    this.Log.Information("Basic Authentication enabled: {0}", settings.Authentication.EnableBasicAuthentication);
 
 
 
@@ -158,13 +158,11 @@ namespace Cake.IIS
 
                     windowsAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableWindowsAuthentication);
 
-                    this.Log.Debug("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
+                    this.Log.Information("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
                 }
 
                 return site;
             }
-
-
 
             public bool Delete(string name)
             {
@@ -172,13 +170,13 @@ namespace Cake.IIS
 
                 if (site == null)
                 {
-                    this.Log.Debug("Site '{0}' not found.", name);
+                    this.Log.Information("Site '{0}' not found.", name);
                     return true;
                 }
                 else
                 {
                     this.Server.Sites.Remove(site);
-                    this.Log.Debug("Site '{0}' deleted.", site.Name);
+                    this.Log.Information("Site '{0}' deleted.", site.Name);
                     return false;
                 }
             }
@@ -195,12 +193,12 @@ namespace Cake.IIS
 
                     do
                     {
-                        this.Log.Verbose("Site '{0}' starting...", site.Name);
+                        this.Log.Information("Site '{0}' starting...", site.Name);
                         state = site.Start();   
                     }
                     while(state != ObjectState.Started);
 
-                    this.Log.Debug("Site '{0}' started.", site.Name);
+                    this.Log.Information("Site '{0}' started.", site.Name);
                     return true;
                 }
                 else
@@ -219,12 +217,12 @@ namespace Cake.IIS
 
                     do
                     {
-                        this.Log.Verbose("Site '{0}' stopping...", site.Name);
+                        this.Log.Information("Site '{0}' stopping...", site.Name);
                         state = site.Start();
                     }
                     while (state != ObjectState.Stopped);
 
-                    this.Log.Debug("Site '{0}' stopped.", site.Name);
+                    this.Log.Information("Site '{0}' stopped.", site.Name);
                     return true;
                 }
                 else
@@ -233,11 +231,255 @@ namespace Cake.IIS
                 }
             }
 
-
-
             public bool Exists(string name)
             {
-                return this.Server.Sites.SingleOrDefault(p => p.Name == name) != null;
+                if (this.Server.Sites.SingleOrDefault(p => p.Name == name) != null)
+                {
+                    this.Log.Information("The site '{0}' exists.", name);
+                    return true;
+                }
+                else
+                {
+                    this.Log.Information("The site '{0}' does not exist.", name);
+                    return false;
+                }
+            }
+
+
+
+            public bool AddBinding(BindingSettings settings)
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException("settings");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.Name))
+                {
+                    throw new ArgumentException("Site name cannot be null!");
+                }
+
+
+
+                //Get Site
+                Site site = this.Server.Sites.SingleOrDefault(p => p.Name == settings.Name);
+
+                if (site != null)
+                {
+                    foreach (Binding b in site.Bindings)
+                    {
+                        if ((b.Protocol == settings.BindingProtocol.ToString()) && (b.BindingInformation == settings.BindingInformation))
+                        {
+                            throw new Exception("A binding with the same ip, port and host header already exists.");
+                        }
+                    }
+
+
+
+                    //Add Binding
+                    Binding newBinding = site.Bindings.CreateElement();
+
+                    newBinding.Protocol = settings.BindingProtocol.ToString();
+                    newBinding.BindingInformation = settings.BindingInformation;
+
+                    site.Bindings.Add(newBinding);
+                    this.Server.CommitChanges();
+
+                    this.Log.Information("Binding added.");
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("Site: " + settings.Name + " does not exist.");
+                }
+            }
+
+            public bool RemoveBinding(BindingSettings settings)
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException("settings");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.Name))
+                {
+                    throw new ArgumentException("Site name cannot be null!");
+                }
+
+
+
+                Site site = this.Server.Sites.SingleOrDefault(p => p.Name == settings.Name);
+
+                if (site != null)
+                {
+                    Binding binding = null;
+
+                    foreach (Binding b in site.Bindings)
+                    {
+                        if ((b.Protocol == settings.BindingProtocol.ToString()) && (b.BindingInformation == settings.BindingInformation))
+                        {
+                            binding = b;
+                        }
+                    }
+
+
+
+                    if (binding != null)
+                    {
+                        site.Bindings.Remove(binding);
+                        this.Server.CommitChanges();
+
+                        this.Log.Information("Binding removed.");
+                        return true;
+                    }
+                    else
+                    {
+                        this.Log.Information("A binding with the same ip, port and host header does not exists.");
+                        return false;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Site: " + settings.Name + " does not exist.");
+                }
+            }
+
+
+
+            public bool AddApplication(ApplicationSettings settings)
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException("settings");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.SiteName))
+                {
+                    throw new ArgumentException("Site name cannot be null!");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.ApplicationPath))
+                {
+                    throw new ArgumentException("Applicaiton path cannot be null!");
+                }
+
+
+
+                //Get Pool
+                ApplicationPool appPool = this.Server.ApplicationPools.SingleOrDefault(p => p.Name == settings.ApplicationPool);
+
+                if (appPool == null)
+                {
+                    throw new Exception("Application Pool '" + settings.ApplicationPool + "' does not exist.");
+                }
+
+
+
+                //Get Site
+                Site site = this.Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
+
+                if (site != null)
+                {
+                    //Get Application
+                    Application app = site.Applications.SingleOrDefault(p => p.Path == settings.ApplicationPath);
+
+                    if (app != null)
+                    {
+                        throw new Exception("Application '" + settings.ApplicationPath + "' already exists.");
+                    }
+                    else
+                    {
+                        app = site.Applications.CreateElement();
+                        app.Path = settings.ApplicationPath;
+                        app.ApplicationPoolName = settings.ApplicationPool;
+
+
+
+                        //Get Directory
+                        VirtualDirectory vDir = app.VirtualDirectories.CreateElement();
+                        vDir.Path = settings.VirtualDirectoryPath;
+                        vDir.PhysicalPath = settings.PhysicalPath;
+
+                        if (!string.IsNullOrEmpty(settings.UserName))
+                        {
+                            if (string.IsNullOrEmpty(settings.Password))
+                            {
+                                throw new Exception("Invalid Virtual Directory User Account Password.");
+                            }
+                            else
+                            {
+                                vDir.UserName = settings.UserName;
+                                vDir.Password = settings.Password;
+                            }
+                        }
+
+                        app.VirtualDirectories.Add(vDir);
+                    }
+
+                    site.Applications.Add(app);
+                    this.Server.CommitChanges();
+
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("Site '" + settings.SiteName + "' does not exist.");
+                }
+            }
+
+            public bool RemoveApplication(ApplicationSettings settings)
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException("settings");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.SiteName))
+                {
+                    throw new ArgumentException("Site name cannot be null!");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.ApplicationPath))
+                {
+                    throw new ArgumentException("Applicaiton path cannot be null!");
+                }
+
+
+
+                //Get Pool
+                ApplicationPool appPool = this.Server.ApplicationPools.SingleOrDefault(p => p.Name == settings.ApplicationPool);
+
+                if (appPool == null)
+                {
+                    throw new Exception("Application Pool '" + settings.ApplicationPool + "' does not exist.");
+                }
+
+
+
+                //Get Site
+                Site site = this.Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
+
+                if (site != null)
+                {
+                    //Get Application
+                    Application app = site.Applications.SingleOrDefault(p => p.Path == settings.ApplicationPath);
+
+                    if (app == null)
+                    {
+                        throw new Exception("Application '" + settings.ApplicationPath + "' does not exists.");
+                    }
+                    else
+                    {
+                        site.Applications.Remove(app);
+                        this.Server.CommitChanges();
+
+                        return true;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Site '" + settings.SiteName + "' does not exist.");
+                }
             }
         #endregion
     }

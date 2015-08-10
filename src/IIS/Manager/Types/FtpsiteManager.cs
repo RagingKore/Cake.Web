@@ -62,7 +62,7 @@ namespace Cake.IIS
 
                     hostNameSupport.SetAttributeValue("useDomainNameAsHostName", true);
 
-                    this.Log.Debug("Ftp Site '{0}' created.", settings.Name);
+                    this.Log.Information("Ftp Site '{0}' created.", settings.Name);
                 }
             }
         #endregion

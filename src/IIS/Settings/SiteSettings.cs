@@ -1,6 +1,6 @@
 ﻿namespace Cake.IIS
 {
-    public abstract class SiteSettings
+    public abstract class SiteSettings : BindingSettings
     {
         #region Fields (1)
             private string _PhysicalPath;
@@ -12,12 +12,8 @@
 
         #region Constructor (1)
             public SiteSettings()
+                : base()
             {
-                this.BindingProtocol = BindingProtocol.Http;
-                this.IpAddress       = "*";
-                this.Port            = 80;
-                this.HostName        = "*";
-
                 this.ServerAutoStart = true;
                 this.Overwrite = false;
 
@@ -30,8 +26,6 @@
 
 
         #region Properties (10)
-            public string Name { get; set; }
-
             public string PhysicalPath
             {
                 get
@@ -47,34 +41,11 @@
 
 
 
-            public string IpAddress { get; set; }
-
-            public int Port { get; set; }
-
-            public string HostName { get; set; }
-
-
-
             public bool ServerAutoStart { get; set; }
 
             public AuthenticationSettings Authentication { get; set; }
 
             public ApplicationPoolSettings ApplicationPool { get; set; }
-
-
-
-            public BindingProtocol BindingProtocol
-            {
-                get; set;
-            }
-
-            public string BindingInformation
-            {
-                get
-                {
-                    return string.Format(@"{0}:{1}:{2}", IpAddress, Port, HostName);
-                }
-            }
 
 
 

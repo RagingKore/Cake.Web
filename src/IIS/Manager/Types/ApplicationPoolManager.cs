@@ -71,11 +71,11 @@ namespace Cake.IIS
 
                 if(pool != null)
                 {
-                    this.Log.Debug("Application pool '{0}' already exists.", settings.Name);
+                    this.Log.Information("Application pool '{0}' already exists.", settings.Name);
 
                     if(settings.Overwrite)
                     {
-                        this.Log.Debug("Application pool '{0}' will be overriden by request.", settings.Name);
+                        this.Log.Information("Application pool '{0}' will be overriden by request.", settings.Name);
                         this.Delete(settings.Name);
                     }
                     else return;
@@ -96,7 +96,7 @@ namespace Cake.IIS
 
 
                 //Set Identity
-                this.Log.Debug("Application pool identity type: {0}", settings.IdentityType.ToString());
+                this.Log.Information("Application pool identity type: {0}", settings.IdentityType.ToString());
 
                 switch(settings.IdentityType)
                 {
@@ -135,7 +135,7 @@ namespace Cake.IIS
                 pool.ProcessModel.ShutdownTimeLimit = settings.ShutdownTimeLimit;
                 pool.ProcessModel.StartupTimeLimit = settings.StartupTimeLimit;
 
-                this.Log.Debug("Application pool created.");
+                this.Log.Information("Application pool created.");
             }
 
             public bool Delete(string name)
@@ -146,13 +146,13 @@ namespace Cake.IIS
 
                     if (pool == null)
                     {
-                        this.Log.Debug("Application pool '{0}' not found.", name);
+                        this.Log.Information("Application pool '{0}' not found.", name);
                         return false;
                     }
                     else
                     {
                         this.Server.ApplicationPools.Remove(pool);
-                        this.Log.Debug("Application pool '{0}' deleted.", pool.Name);
+                        this.Log.Information("Application pool '{0}' deleted.", pool.Name);
                         return true;
                     }
                 }
@@ -168,13 +168,13 @@ namespace Cake.IIS
 
                 if (pool == null)
                 {
-                    this.Log.Debug("Application pool '{0}' not found.", name);
+                    this.Log.Information("Application pool '{0}' not found.", name);
                     return false;
                 }
                 else
                 {
                     pool.Recycle();
-                    this.Log.Debug("Application pool '{0}' recycled.", pool.Name);
+                    this.Log.Information("Application pool '{0}' recycled.", pool.Name);
                     return true;
                 }
             }
@@ -185,13 +185,13 @@ namespace Cake.IIS
 
                 if (pool == null)
                 {
-                    this.Log.Debug("Application pool '{0}' not found.", name);
+                    this.Log.Information("Application pool '{0}' not found.", name);
                     return false;
                 }
                 else
                 {
                     pool.Start();
-                    this.Log.Debug("Application pool '{0}' recycled.", pool.Name);
+                    this.Log.Information("Application pool '{0}' recycled.", pool.Name);
                     return true;
                 }
             }
@@ -202,20 +202,29 @@ namespace Cake.IIS
 
                 if (pool == null)
                 {
-                    this.Log.Debug("Application pool '{0}' not found.", name);
+                    this.Log.Information("Application pool '{0}' not found.", name);
                     return false;
                 }
                 else
                 {
                     pool.Stop();
-                    this.Log.Debug("Application pool '{0}' recycled.", pool.Name);
+                    this.Log.Information("Application pool '{0}' recycled.", pool.Name);
                     return true;
                 }
             }
 
             public bool Exists(string name)
             {
-                return this.Server.ApplicationPools.SingleOrDefault(p => p.Name == name) != null;
+                if (this.Server.ApplicationPools.SingleOrDefault(p => p.Name == name) != null)
+                {
+                    this.Log.Information("The ApplicationPool '{0}' exists.", name);
+                    return true;
+                }
+                else
+                {
+                    this.Log.Information("The ApplicationPool '{0}' does not exist.", name);
+                    return false;
+                }
             }
 
             public bool IsSystemDefault(string name)
@@ -225,7 +234,7 @@ namespace Cake.IIS
                     return true;
                 }
 
-                this.Log.Debug("Application pool '{0}' is system's default.", name);
+                this.Log.Information("Application pool '{0}' is system's default.", name);
                 return false;
             }
         #endregion

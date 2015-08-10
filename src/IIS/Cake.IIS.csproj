@@ -48,6 +48,8 @@
     <Compile Include="Aliases\ApplicationPoolAliases.cs" />
     <Compile Include="Manager\Base\BaseManager.cs" />
     <Compile Include="Manager\Types\ApplicationPoolManager.cs" />
+    <Compile Include="Settings\ApplicationSettings.cs" />
+    <Compile Include="Settings\BindingSettings.cs" />
     <Compile Include="Types\IdentityType.cs" />
     <Compile Include="Settings\ApplicationPoolSettings.cs" />
     <Compile Include="Settings\AuthenticationSettings.cs" />

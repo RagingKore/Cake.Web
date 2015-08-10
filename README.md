@@ -16,9 +16,6 @@ Cake-Build addin that extends Cake with IIS extensions
 * Start Site
 * Stop Site
 * Site Exists
-
-
-
 * Create Applicaiton Pool
 * Delete Pool
 * Start Pool

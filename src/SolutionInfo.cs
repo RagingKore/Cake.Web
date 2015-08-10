@@ -6,8 +6,8 @@
 using System.Reflection;
 
 [assembly: AssemblyProduct("Cake IIS")]
-[assembly: AssemblyVersion("0.0.3")]
-[assembly: AssemblyFileVersion("0.0.3")]
-[assembly: AssemblyInformationalVersion("0.0.3")]
+[assembly: AssemblyVersion("0.0.4")]
+[assembly: AssemblyFileVersion("0.0.4")]
+[assembly: AssemblyInformationalVersion("0.0.4")]
 [assembly: AssemblyCopyright("Copyright (c) Sergio Silveira, Phillip Sharpe 2015")]
 

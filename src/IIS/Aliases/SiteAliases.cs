@@ -86,5 +86,81 @@ namespace Cake.IIS
                         .Stop(name);
             }
         }
+
+
+
+        [CakeMethodAlias]
+        public static void AddSiteBinding(this ICakeContext context, WebsiteSettings settings)
+        {
+            context.AddSiteBinding("", settings);
+        }
+
+        [CakeMethodAlias]
+        public static void AddSiteBinding(this ICakeContext context, string server, WebsiteSettings settings)
+        {
+            using (ServerManager manager = IISManager.Connect(server))
+            {
+                WebsiteManager
+                    .Using(manager, context.Log)
+                    .AddBinding(settings);
+            }
+        }
+
+
+
+        [CakeMethodAlias]
+        public static void RemoveSiteBinding(this ICakeContext context, WebsiteSettings settings)
+        {
+            context.RemoveSiteBinding("", settings);
+        }
+
+        [CakeMethodAlias]
+        public static void RemoveSiteBinding(this ICakeContext context, string server, WebsiteSettings settings)
+        {
+            using (ServerManager manager = IISManager.Connect(server))
+            {
+                WebsiteManager
+                    .Using(manager, context.Log)
+                    .AddBinding(settings);
+            }
+        }
+
+
+
+        [CakeMethodAlias]
+        public static void AddSiteApplication(this ICakeContext context, ApplicationSettings settings)
+        {
+            context.AddSiteApplication("", settings);
+        }
+
+        [CakeMethodAlias]
+        public static void AddSiteApplication(this ICakeContext context, string server, ApplicationSettings settings)
+        {
+            using (ServerManager manager = IISManager.Connect(server))
+            {
+                WebsiteManager
+                    .Using(manager, context.Log)
+                    .AddApplication(settings);
+            }
+        }
+
+
+
+        [CakeMethodAlias]
+        public static void RemoveSiteApplication(this ICakeContext context, ApplicationSettings settings)
+        {
+            context.RemoveSiteApplication("", settings);
+        }
+
+        [CakeMethodAlias]
+        public static void RemoveSiteApplication(this ICakeContext context, string server, ApplicationSettings settings)
+        {
+            using (ServerManager manager = IISManager.Connect(server))
+            {
+                WebsiteManager
+                    .Using(manager, context.Log)
+                    .AddApplication(settings);
+            }
+        }
     }
 }

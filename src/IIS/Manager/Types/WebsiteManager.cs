@@ -40,7 +40,7 @@ namespace Cake.IIS
 
                 if (!exists)
                 {
-                    this.Log.Debug("Web Site '{0}' created.", settings.Name);
+                    this.Log.Information("Web Site '{0}' created.", settings.Name);
                 }
             }
         #endregion
