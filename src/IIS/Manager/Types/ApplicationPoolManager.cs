@@ -135,6 +135,9 @@ namespace Cake.IIS
                 pool.ProcessModel.ShutdownTimeLimit = settings.ShutdownTimeLimit;
                 pool.ProcessModel.StartupTimeLimit = settings.StartupTimeLimit;
 
+                // Commit changes!
+                this.Server.CommitChanges();
+
                 this.Log.Information("Application pool created.");
             }
 
