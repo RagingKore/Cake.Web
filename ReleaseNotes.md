@@ -2,6 +2,7 @@
 * New UnitTests and Bugfixes by Jake Scott
 * AppPool TimeSpan checks
 * Added cake build example
+* Added troubleshooting info
 
 ### New in 0.0.4 (Released 2015/08/10)
 * Seperate out BindingSettings

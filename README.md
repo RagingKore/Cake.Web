@@ -117,3 +117,9 @@ RunTarget("Website-Create");
 ## Example
 
 A complete Cake example can be found [here](https://github.com/SharpeRAD/Cake.IIS/blob/master/test/build.cake)
+
+
+
+## TroubleShooting
+
+A few pointers for managing IIS can be found [here](https://github.com/SharpeRAD/Cake.IIS/blob/master/TroubleShooting.md)

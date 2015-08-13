@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{2C6F771C-2
 	ProjectSection(SolutionItems) = preProject
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
+		..\TroubleShooting.md = ..\TroubleShooting.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{05F83CF5-4478-44BF-8272-0961FCFED880}"
