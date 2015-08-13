@@ -37,6 +37,6 @@ using Xunit;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 
-// Disable parallel test running
+// Disable xunit parallel test runner
 // http://xunit.github.io/docs/running-tests-in-parallel.html
 [assembly: CollectionBehavior(MaxParallelThreads = 1, DisableTestParallelization = true)]

@@ -195,6 +195,7 @@ namespace Cake.IIS
                 else
                 {
                     pool.Start();
+                    this.Server.CommitChanges();
                     this.Log.Information("Application pool '{0}' recycled.", pool.Name);
                     return true;
                 }
@@ -212,6 +213,7 @@ namespace Cake.IIS
                 else
                 {
                     pool.Stop();
+                    this.Server.CommitChanges();
                     this.Log.Information("Application pool '{0}' recycled.", pool.Name);
                     return true;
                 }
