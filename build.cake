@@ -161,7 +161,7 @@ Task("Copy-Files")
     CopyFileToDirectory(buildDir + "/Cake.IIS.dll", binDir);
     CopyFileToDirectory(buildDir + "/Cake.IIS.pdb", binDir);
 
-    CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md" }, binDir);
+    CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md", "src/IIS/packages.config" }, binDir);
 
 
 	CopyDirectory("./tools/",  "./test/tools/");

@@ -74,7 +74,7 @@ namespace Cake.IIS.Tests
             Site site = CakeHelper.GetWebsite(settings.Name);
 
             Assert.NotNull(site);
-            Assert.True(site.State == ObjectState.Started);
+            Assert.True(site.State == ObjectState.Stopped);
         }
     }
 }

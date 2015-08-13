@@ -128,12 +128,29 @@ namespace Cake.IIS
                 pool.ProcessModel.MaxProcesses = settings.MaxProcesses;
 
                 pool.ProcessModel.PingingEnabled = settings.PingingEnabled;
-                pool.ProcessModel.PingInterval = settings.PingInterval;
-                pool.ProcessModel.PingResponseTime = settings.PingResponseTime;
 
-                pool.ProcessModel.IdleTimeout = settings.IdleTimeout;
-                pool.ProcessModel.ShutdownTimeLimit = settings.ShutdownTimeLimit;
-                pool.ProcessModel.StartupTimeLimit = settings.StartupTimeLimit;
+                if (settings.PingResponseTime != TimeSpan.MinValue)
+                {
+                    pool.ProcessModel.PingInterval = settings.PingInterval;
+                }
+                if (settings.PingResponseTime != TimeSpan.MinValue)
+                {
+                    pool.ProcessModel.PingResponseTime = settings.PingResponseTime;
+                }
+                if (settings.IdleTimeout != TimeSpan.MinValue)
+                {
+                    pool.ProcessModel.IdleTimeout = settings.IdleTimeout;
+                }
+                if (settings.ShutdownTimeLimit != TimeSpan.MinValue)
+                {
+                    pool.ProcessModel.ShutdownTimeLimit = settings.ShutdownTimeLimit;
+                }
+                if (settings.StartupTimeLimit != TimeSpan.MinValue)
+                {
+                    pool.ProcessModel.StartupTimeLimit = settings.StartupTimeLimit;
+                }
+
+
 
                 // Commit changes!
                 this.Server.CommitChanges();

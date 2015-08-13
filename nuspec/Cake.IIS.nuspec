@@ -24,6 +24,7 @@
 
    <files>
       <file src="Cake.IIS.dll" target="lib/net45" />
+      <file src="packages.config" />
       <file src="LICENSE" />
    </files>
 </package>

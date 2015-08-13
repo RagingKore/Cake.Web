@@ -1,3 +1,8 @@
+### New in 0.0.5 (Released 2015/08/13)
+* New UnitTests and Bugfixes by Jake Scott
+* AppPool TimeSpan checks
+* Added cake build example
+
 ### New in 0.0.4 (Released 2015/08/10)
 * Seperate out BindingSettings
 * Add / Remove site binding

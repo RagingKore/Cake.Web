@@ -28,6 +28,12 @@ namespace Cake.IIS
 
                 this.Autostart = true;
                 this.Overwrite = false;
+
+                this.PingInterval = TimeSpan.MinValue;
+                this.PingResponseTime = TimeSpan.MinValue;
+                this.IdleTimeout = TimeSpan.MinValue;
+                this.ShutdownTimeLimit = TimeSpan.MinValue;
+                this.StartupTimeLimit = TimeSpan.MinValue;
             }
         #endregion
 

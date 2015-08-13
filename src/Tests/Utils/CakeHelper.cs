@@ -105,7 +105,6 @@ namespace Cake.IIS.Tests.Utils
                     if (site != null)
                     {
                         site.Start();
-                        server.CommitChanges();
                     }
                 }
             }
@@ -116,10 +115,9 @@ namespace Cake.IIS.Tests.Utils
                 {
                     Site site = server.Sites.FirstOrDefault(x => x.Name == name);
 
-                    if ((site != null) && (site.State != ObjectState.Stopped))
+                    if (site != null)
                     {
                         site.Stop();
-                        server.CommitChanges();
                     }
                 }
             }
@@ -165,7 +163,6 @@ namespace Cake.IIS.Tests.Utils
                     if (pool != null)
                     {
                         pool.Start();
-                        server.CommitChanges();
                     }
                 }
             }
@@ -176,10 +173,9 @@ namespace Cake.IIS.Tests.Utils
                 {
                     ApplicationPool pool = server.ApplicationPools.FirstOrDefault(x => x.Name == name);
 
-                    if ((pool != null) && (pool.State != ObjectState.Stopped))
+                    if (pool != null)
                     {
                         pool.Stop();
-                        server.CommitChanges();
                     }
                 }
             }
