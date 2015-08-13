@@ -219,7 +219,7 @@ namespace Cake.IIS
                     do
                     {
                         this.Log.Information("Site '{0}' stopping...", site.Name);
-                        state = site.Start();
+                        state = site.Stop();
                     }
                     while (state != ObjectState.Stopped);
 

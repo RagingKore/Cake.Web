@@ -59,7 +59,7 @@ namespace Cake.IIS.Tests
             CakeHelper.AssertWebsiteStarted(settings.Name);
         }
 
-        [Fact(Skip = "Not working...")]
+        [Fact]
         public void ShouldStopWebsite()
         {
             var settings = CakeHelper.GetWebsiteSettings();
