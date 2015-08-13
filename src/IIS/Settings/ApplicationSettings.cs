@@ -1,9 +1,3 @@
-#region Using Statements
-    using System;
-#endregion
-
-
-
 namespace Cake.IIS
 {
     public class ApplicationSettings

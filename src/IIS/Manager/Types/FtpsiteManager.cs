@@ -1,7 +1,4 @@
 #region Using Statements
-    using System;
-    using System.Linq;
-
     using Microsoft.Web.Administration;
 
     using Cake.Core.Diagnostics;

@@ -69,12 +69,11 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ApplicationPoolTests.cs" />
-    <Compile Include="Tests\IISTests.cs" />
+    <Compile Include="Tests\ApplicationPoolTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\DebugLog.cs" />
     <Compile Include="Utils\CakeHelper.cs" />
-    <Compile Include="WebsiteTests.cs" />
+    <Compile Include="Tests\WebsiteTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

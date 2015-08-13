@@ -1,6 +1,5 @@
 #region Using Statements
     using System;
-    using System.Linq;
 
     using Cake.Core.Diagnostics;
 
