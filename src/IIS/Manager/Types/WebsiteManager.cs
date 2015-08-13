@@ -37,9 +37,10 @@ namespace Cake.IIS
             {
                 bool exists;
                 Site site = base.CreateSite(settings, out exists);
-
+                
                 if (!exists)
                 {
+                    this.Server.CommitChanges();
                     this.Log.Information("Web Site '{0}' created.", settings.Name);
                 }
             }

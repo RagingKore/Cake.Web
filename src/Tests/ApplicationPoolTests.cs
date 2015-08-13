@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Cake.IIS.Tests.Utils;
-using Microsoft.Web.Administration;
+﻿using Cake.IIS.Tests.Utils;
 using Xunit;
 
 namespace Cake.IIS.Tests
@@ -13,7 +11,7 @@ namespace Cake.IIS.Tests
             var settings = CakeHelper.GetAppPoolSettings();
             
             // Arrange
-            DeletePool(settings.Name);
+            CakeHelper.DeletePool(settings.Name);
 
             {
                 // Act 
@@ -21,7 +19,7 @@ namespace Cake.IIS.Tests
             }
 
             // Assert
-            AssertPoolExists(settings.Name);
+            CakeHelper.AssertPoolExists(settings.Name);
         }
 
         [Fact]
@@ -30,8 +28,8 @@ namespace Cake.IIS.Tests
             var settings = CakeHelper.GetAppPoolSettings();
 
             // Arrange
-            CreatePool(settings);
-            AssertPoolExists(settings.Name);
+            CakeHelper.CreatePool(settings);
+            CakeHelper.AssertPoolExists(settings.Name);
             
             {
                 // Act
@@ -39,7 +37,7 @@ namespace Cake.IIS.Tests
             }
 
             // Assert
-            AssertPoolNotExists(settings.Name);
+            CakeHelper.AssertPoolNotExists(settings.Name);
         }
 
         [Fact]
@@ -48,9 +46,9 @@ namespace Cake.IIS.Tests
             var settings = CakeHelper.GetAppPoolSettings();
 
             // Arrange
-            CreatePool(settings);
-            AssertPoolExists(settings.Name);
-            StopPool(settings.Name);
+            CakeHelper.CreatePool(settings);
+            CakeHelper.AssertPoolExists(settings.Name);
+            CakeHelper.StopPool(settings.Name);
 
             {
                 // Act
@@ -58,7 +56,7 @@ namespace Cake.IIS.Tests
             }
 
             // Assert
-            AssertPoolStarted(settings.Name);
+            CakeHelper.AssertPoolStarted(settings.Name);
         }
 
         [Fact]
@@ -67,9 +65,9 @@ namespace Cake.IIS.Tests
             var settings = CakeHelper.GetAppPoolSettings();
 
             // Arrange
-            CreatePool(settings);
-            AssertPoolExists(settings.Name);
-            StartPool(settings.Name);
+            CakeHelper.CreatePool(settings);
+            CakeHelper.AssertPoolExists(settings.Name);
+            CakeHelper.StartPool(settings.Name);
 
             {
                 // Act
@@ -77,88 +75,9 @@ namespace Cake.IIS.Tests
             }
 
             // Assert
-            AssertPoolStopped(settings.Name);
+            CakeHelper.AssertPoolStopped(settings.Name);
         }
 
-        private void AssertPoolStarted(string name)
-        {
-            ApplicationPool pool = GetPool(name);
-            Assert.NotNull(pool);
-            Assert.True(pool.State == ObjectState.Started);
-        }
-
-        private void AssertPoolStopped(string name)
-        {
-            ApplicationPool pool = GetPool(name);
-            Assert.NotNull(pool);
-            Assert.True(pool.State == ObjectState.Stopped);
-        }
-
-        private void StopPool(string name)
-        {
-            using (var serverManager = new ServerManager())
-            {
-                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == name);
-                Assert.NotNull(pool);
-                if (pool.State != ObjectState.Stopped)
-                {
-                    pool.Stop();
-                }
-                serverManager.CommitChanges();
-            }
-        }
-
-        private void StartPool(string name)
-        {
-            using (var serverManager = new ServerManager())
-            {
-                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == name);
-                Assert.NotNull(pool);
-                pool.Start();
-                serverManager.CommitChanges();
-            }
-        }
-
-        private void CreatePool(ApplicationPoolSettings settings)
-        {
-            ApplicationPoolManager applicationPoolManager = CakeHelper.CreateApplicationPoolManager();
-            applicationPoolManager.Create(settings);
-            AssertPoolExists(settings.Name);
-        }
-
-        private void AssertPoolExists(string name)
-        {
-            ApplicationPool pool = GetPool(name);
-            Assert.NotNull(pool);
-        }
-
-        private void AssertPoolNotExists(string name)
-        {
-            ApplicationPool pool = GetPool(name);
-            Assert.Null(pool);
-        }
-
-        private ApplicationPool GetPool(string name)
-        {
-            using (var serverManager = new ServerManager())
-            {
-                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == name);
-                return pool;
-            }
-        }
-
-        private void DeletePool(string name)
-        {
-            using (var serverManager = new ServerManager())
-            {
-                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == name);
-                if (pool != null)
-                {
-                    serverManager.ApplicationPools.Remove(pool);
-                }
-
-                serverManager.CommitChanges();
-            }
-        }
+       
     }
 }
