@@ -155,6 +155,7 @@ namespace Cake.IIS
                     else
                     {
                         this.Server.ApplicationPools.Remove(pool);
+                        this.Server.CommitChanges();
                         this.Log.Information("Application pool '{0}' deleted.", pool.Name);
                         return true;
                     }

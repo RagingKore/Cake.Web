@@ -10,21 +10,63 @@ namespace Cake.IIS.Tests
         [Fact]
         public void ShouldCreateAppPool()
         {
+            var settings = GetAppPoolSettings();
+            
             // Arrange
-            ApplicationPoolSettings settings = GetAppPoolSettings();
             DeletePool(settings.Name);
 
             {
-                // Act
-                var applicationPoolManager = CakeHelper.CreateApplicationPoolManager();
-                applicationPoolManager.Create(settings);
+                // Act 
+                CakeHelper.CreateApplicationPoolManager().Create(settings);
             }
 
             // Assert
+            AssertPoolExists(settings.Name);
+        }
+
+        [Fact]
+        public void ShouldDeleteAppPool()
+        {
+            var settings = GetAppPoolSettings();
+
+            // Arrange
+            CreatePool(settings);
+            AssertPoolExists(settings.Name);
+            
+            {
+                // Act
+                CakeHelper.CreateApplicationPoolManager().Delete(settings.Name);
+            }
+
+            // Assert
+            AssertPoolNotExists(settings.Name);
+        }
+
+        private void CreatePool(ApplicationPoolSettings settings)
+        {
+            ApplicationPoolManager applicationPoolManager = CakeHelper.CreateApplicationPoolManager();
+            applicationPoolManager.Create(settings);
+            AssertPoolExists(settings.Name);
+        }
+
+        private void AssertPoolExists(string name)
+        {
+            ApplicationPool pool = GetPool(name);
+            Assert.NotNull(pool);
+        }
+
+        private void AssertPoolNotExists(string name)
+        {
+            ApplicationPool pool = GetPool(name);
+            Assert.Null(pool);
+        }
+
+        private ApplicationPool GetPool(string name)
+        {
             using (var serverManager = new ServerManager())
             {
-                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == settings.Name);
-                Assert.NotNull(pool);
+                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == name);
+                return pool;
             }
         }
 
