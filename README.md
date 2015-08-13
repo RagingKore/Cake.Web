@@ -37,6 +37,7 @@ or directly in your build script via a cake addin:
 
 ```csharp
 #addin "Cake.IIS"
+#addin "Microsoft.Web.Administration"
 ```
 
 
