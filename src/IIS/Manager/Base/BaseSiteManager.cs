@@ -176,6 +176,7 @@ namespace Cake.IIS
                 else
                 {
                     this.Server.Sites.Remove(site);
+                    this.Server.CommitChanges();
                     this.Log.Information("Site '{0}' deleted.", site.Name);
                     return false;
                 }
@@ -218,7 +219,7 @@ namespace Cake.IIS
                     do
                     {
                         this.Log.Information("Site '{0}' stopping...", site.Name);
-                        state = site.Start();
+                        state = site.Stop();
                     }
                     while (state != ObjectState.Stopped);
 
