@@ -1,14 +1,12 @@
 ﻿#region Using Statements
-    using System;
-    using System.Diagnostics;
-    using System.Collections.Generic;
 
-    using Cake.Core.Diagnostics;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Cake.Core.Diagnostics;
+
 #endregion
 
-
-
-namespace Cake.IIS.Tests
+namespace Cake.IIS.Tests.Utils
 {
     /// <summary>
     /// A log that outputs messages to debug
@@ -30,8 +28,6 @@ namespace Cake.IIS.Tests
             get { return Verbosity.Diagnostic; }
         }
 
-
-
         /// <summary>
         /// Writes the text representation of the specified array of objects to the 
         /// log using the specified verbosity, log level and format information.
@@ -44,12 +40,12 @@ namespace Cake.IIS.Tests
         {
             try
             {
-                if (DebugLog.Lines == null)
+                if (Lines == null)
                 {
-                    DebugLog.Lines = new List<string>();
+                    Lines = new List<string>();
                 }
 
-                DebugLog.Lines.Add(format);
+                Lines.Add(format);
                 Debug.WriteLine(format);
             }
             catch { }

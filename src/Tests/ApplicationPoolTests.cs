@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using Cake.IIS.Tests.Utils;
 using Microsoft.Web.Administration;
 using Xunit;
 
@@ -10,7 +10,7 @@ namespace Cake.IIS.Tests
         [Fact]
         public void ShouldCreateAppPool()
         {
-            var settings = GetAppPoolSettings();
+            var settings = CakeHelper.GetAppPoolSettings();
             
             // Arrange
             DeletePool(settings.Name);
@@ -27,7 +27,7 @@ namespace Cake.IIS.Tests
         [Fact]
         public void ShouldDeleteAppPool()
         {
-            var settings = GetAppPoolSettings();
+            var settings = CakeHelper.GetAppPoolSettings();
 
             // Arrange
             CreatePool(settings);
@@ -45,7 +45,7 @@ namespace Cake.IIS.Tests
         [Fact]
         public void ShouldStartAppPool()
         {
-            var settings = GetAppPoolSettings();
+            var settings = CakeHelper.GetAppPoolSettings();
 
             // Arrange
             CreatePool(settings);
@@ -64,7 +64,7 @@ namespace Cake.IIS.Tests
         [Fact]
         public void ShouldStopAppPool()
         {
-            var settings = GetAppPoolSettings();
+            var settings = CakeHelper.GetAppPoolSettings();
 
             // Arrange
             CreatePool(settings);
@@ -159,25 +159,6 @@ namespace Cake.IIS.Tests
 
                 serverManager.CommitChanges();
             }
-        }
-
-        private ApplicationPoolSettings GetAppPoolSettings()
-        {
-            var settings = new ApplicationPoolSettings
-            {
-                Name = "superman.web",
-                Autostart = true,
-                MaxProcesses = 1,
-                Enable32BitAppOnWin64 = false,
-                IdleTimeout = TimeSpan.FromMinutes(20),
-                ShutdownTimeLimit = TimeSpan.FromSeconds(90),
-                StartupTimeLimit = TimeSpan.FromSeconds(90),
-                PingingEnabled = true,
-                PingInterval = TimeSpan.FromSeconds(30),
-                PingResponseTime = TimeSpan.FromSeconds(90)
-            };
-
-            return settings;
         }
     }
 }
