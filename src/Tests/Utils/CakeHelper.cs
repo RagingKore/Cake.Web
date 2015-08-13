@@ -106,15 +106,54 @@ namespace Cake.IIS.Tests.Utils
 
         public static void DeleteWebsite(string name)
         {
-            using (var serverManager = new ServerManager())
+            using (var server = new ServerManager())
             {
-                var site = serverManager.Sites.FirstOrDefault(x => x.Name == name);
+                var site = server.Sites.FirstOrDefault(x => x.Name == name);
                 if (site != null)
                 {
-                    serverManager.Sites.Remove(site);
-                    serverManager.CommitChanges();
+                    server.Sites.Remove(site);
+                    server.CommitChanges();
                 }
             }
+        }
+
+        public static void StartWebsite(string name)
+        {
+            using (var server = new ServerManager())
+            {
+                Site site = server.Sites.FirstOrDefault(x => x.Name == name);
+                Assert.NotNull(site);
+                site.Start();
+                server.CommitChanges();
+            }
+        }
+
+        public static void StopWebsite(string name)
+        {
+            using (var server = new ServerManager())
+            {
+                Site site = server.Sites.FirstOrDefault(x => x.Name == name);
+                Assert.NotNull(site);
+                if (site.State != ObjectState.Stopped)
+                {
+                    site.Stop();
+                    server.CommitChanges();
+                }
+            }
+        }
+
+        public static void AssertWebsiteStarted(string name)
+        {
+            var site = GetWebsite(name);
+            Assert.NotNull(site);
+            Assert.True(site.State == ObjectState.Started);
+        }
+
+        public static void AssertWebsiteStopped(string name)
+        {
+            var site = GetWebsite(name);
+            Assert.NotNull(site);
+            Assert.True(site.State == ObjectState.Stopped);
         }
 
         public static void AssertPoolStarted(string name)
@@ -133,26 +172,26 @@ namespace Cake.IIS.Tests.Utils
 
         public static void StopPool(string name)
         {
-            using (var serverManager = new ServerManager())
+            using (var server = new ServerManager())
             {
-                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == name);
+                ApplicationPool pool = server.ApplicationPools.FirstOrDefault(x => x.Name == name);
                 Assert.NotNull(pool);
                 if (pool.State != ObjectState.Stopped)
                 {
                     pool.Stop();
+                    server.CommitChanges();
                 }
-                serverManager.CommitChanges();
             }
         }
 
         public static void StartPool(string name)
         {
-            using (var serverManager = new ServerManager())
+            using (var server = new ServerManager())
             {
-                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == name);
+                ApplicationPool pool = server.ApplicationPools.FirstOrDefault(x => x.Name == name);
                 Assert.NotNull(pool);
                 pool.Start();
-                serverManager.CommitChanges();
+                server.CommitChanges();
             }
         }
 
@@ -177,28 +216,26 @@ namespace Cake.IIS.Tests.Utils
 
         public static ApplicationPool GetPool(string name)
         {
-            using (var serverManager = new ServerManager())
+            using (var server = new ServerManager())
             {
-                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == name);
+                ApplicationPool pool = server.ApplicationPools.FirstOrDefault(x => x.Name == name);
                 return pool;
             }
         }
 
         public static void DeletePool(string name)
         {
-            using (var serverManager = new ServerManager())
+            using (var server = new ServerManager())
             {
-                ApplicationPool pool = serverManager.ApplicationPools.FirstOrDefault(x => x.Name == name);
+                ApplicationPool pool = server.ApplicationPools.FirstOrDefault(x => x.Name == name);
                 if (pool != null)
                 {
-                    serverManager.ApplicationPools.Remove(pool);
-                    serverManager.CommitChanges();
+                    server.ApplicationPools.Remove(pool);
+                    server.CommitChanges();
                 }
             }
         }
 
         #endregion
-
-        
     }
 }

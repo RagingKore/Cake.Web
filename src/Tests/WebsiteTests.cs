@@ -39,5 +39,43 @@ namespace Cake.IIS.Tests
             // Assert
             CakeHelper.AssertWebsiteNotExists(settings.Name);
         }
+
+        [Fact]
+        public void ShouldStartWebsite()
+        {
+            var settings = CakeHelper.GetWebsiteSettings();
+
+            // Arrange
+            CakeHelper.CreateWebsite(settings);
+            CakeHelper.AssertWebsiteExists(settings.Name);
+            CakeHelper.StopWebsite(settings.Name);
+
+            {
+                // Act
+                CakeHelper.CreateWebsiteManager().Start(settings.Name);
+            }
+
+            // Assert
+            CakeHelper.AssertWebsiteStarted(settings.Name);
+        }
+
+        [Fact(Skip = "Not working...")]
+        public void ShouldStopWebsite()
+        {
+            var settings = CakeHelper.GetWebsiteSettings();
+
+            // Arrange
+            CakeHelper.CreateWebsite(settings);
+            CakeHelper.AssertWebsiteExists(settings.Name);
+            CakeHelper.StartWebsite(settings.Name);
+
+            {
+                // Act
+                CakeHelper.CreateWebsiteManager().Stop(settings.Name);
+            }
+
+            // Assert
+            CakeHelper.AssertWebsiteStopped(settings.Name);
+        }
     }
 }
