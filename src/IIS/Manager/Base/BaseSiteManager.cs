@@ -176,6 +176,7 @@ namespace Cake.IIS
                 else
                 {
                     this.Server.Sites.Remove(site);
+                    this.Server.CommitChanges();
                     this.Log.Information("Site '{0}' deleted.", site.Name);
                     return false;
                 }

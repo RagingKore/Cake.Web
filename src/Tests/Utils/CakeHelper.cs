@@ -76,13 +76,20 @@ namespace Cake.IIS.Tests.Utils
             return settings;
         }
 
+        public static void CreateWebsite(WebsiteSettings settings)
+        {
+            var websiteManager = CreateWebsiteManager();
+            websiteManager.Create(settings);
+            AssertWebsiteExists(settings.Name);
+        }
+
         public static void AssertWebsiteExists(string name)
         {
             var website = GetWebsite(name);
             Assert.NotNull(website);
         }
 
-        private static void AssertWebsiteNotExists(string name)
+        public static void AssertWebsiteNotExists(string name)
         {
             var website = GetWebsite(name);
             Assert.Null(website);
@@ -191,5 +198,7 @@ namespace Cake.IIS.Tests.Utils
         }
 
         #endregion
+
+        
     }
 }

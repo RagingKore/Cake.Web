@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Cake.IIS.Tests.Utils;
-using Microsoft.Web.Administration;
+﻿using Cake.IIS.Tests.Utils;
 using Xunit;
 
 namespace Cake.IIS.Tests
@@ -22,6 +20,24 @@ namespace Cake.IIS.Tests
 
             // Assert
             CakeHelper.AssertWebsiteExists(settings.Name);
+        }
+
+        [Fact]
+        public void ShouldDeleteWebsite()
+        {
+            var settings = CakeHelper.GetWebsiteSettings();
+
+            // Arrange
+            CakeHelper.CreateWebsite(settings);
+            CakeHelper.AssertWebsiteExists(settings.Name);
+
+            {
+                // Act
+                CakeHelper.CreateWebsiteManager().Delete(settings.Name);
+            }
+
+            // Assert
+            CakeHelper.AssertWebsiteNotExists(settings.Name);
         }
     }
 }
