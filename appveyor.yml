@@ -2,6 +2,14 @@
 init:
   - git config --global core.autocrlf true
 
+# Install services
+services:
+  - iis
+  - msmq
+
+install:
+- ps: Install-WindowsFeature -Name AS-WAS-Support
+
 # Build script
 build_script:
   - cmd: powershell -NoProfile -ExecutionPolicy unrestricted -Command .\build.ps1 -Target "AppVeyor"
