@@ -36,7 +36,7 @@ Task("Website-Create")
     {
         Name = "MyBlog",
         HostName = "blog.website.com",
-        PhysicalPath = "C:/Websites/Blog",
+        PhysicalDirectory = "C:/Websites/Blog",
 
         ApplicationPool = new ApplicationPoolSettings()
         {
