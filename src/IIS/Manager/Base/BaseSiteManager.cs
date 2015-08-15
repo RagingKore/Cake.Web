@@ -208,7 +208,7 @@ namespace Cake.IIS
                     {
                         site.Start();
                     }
-                    catch (System.Runtime.InteropServices.COMException e)
+                    catch (System.Runtime.InteropServices.COMException)
                     {
                         _Log.Information("Waiting for IIS to activate new config");
                         Thread.Sleep(1000);
@@ -234,7 +234,7 @@ namespace Cake.IIS
                     {
                         site.Stop();
                     }
-                    catch (System.Runtime.InteropServices.COMException e)
+                    catch (System.Runtime.InteropServices.COMException)
                     {
                         _Log.Information("Waiting for IIS to activate new config");
                         Thread.Sleep(1000);

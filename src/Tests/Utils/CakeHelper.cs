@@ -31,17 +31,29 @@ namespace Cake.IIS.Tests.Utils
             //Managers
             public static ApplicationPoolManager CreateApplicationPoolManager()
             {
-                return new ApplicationPoolManager(CakeHelper.CreateEnvironment(), new DebugLog());
+                ApplicationPoolManager manager = new ApplicationPoolManager(CakeHelper.CreateEnvironment(), new DebugLog());
+
+                manager.SetServer();
+
+                return manager;
             }
 
             public static FtpsiteManager CreateFtpsiteManager()
             {
-                return new FtpsiteManager(CakeHelper.CreateEnvironment(), new DebugLog());
+                FtpsiteManager manager = new FtpsiteManager(CakeHelper.CreateEnvironment(), new DebugLog());
+
+                manager.SetServer();
+
+                return manager;
             }
 
             public static WebsiteManager CreateWebsiteManager()
             {
-                return new WebsiteManager(CakeHelper.CreateEnvironment(), new DebugLog());
+                WebsiteManager manager = new WebsiteManager(CakeHelper.CreateEnvironment(), new DebugLog());
+
+                manager.SetServer();
+
+                return manager;
             }
 
 

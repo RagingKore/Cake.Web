@@ -61,6 +61,16 @@ namespace Cake.IIS
 
 
 
+            public void SetServer()
+            {
+                this.SetServer(BaseManager.Connect(""));
+            }
+
+            public void SetServer(string server)
+            {
+                this.SetServer(BaseManager.Connect(server));
+            }
+
             public void SetServer(ServerManager manager)
             {
                 if (manager == null)
@@ -70,6 +80,7 @@ namespace Cake.IIS
 
                 _Server = manager;
             }
+
 
 
             protected void SetWorkingDirectory(SiteSettings settings)
