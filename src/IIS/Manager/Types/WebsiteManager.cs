@@ -1,6 +1,7 @@
 #region Using Statements
     using Microsoft.Web.Administration;
 
+    using Cake.Core;
     using Cake.Core.Diagnostics;
 #endregion
 
@@ -11,8 +12,8 @@ namespace Cake.IIS
     public class WebsiteManager : BaseSiteManager
     {
         #region Constructor (1)
-            public WebsiteManager(ServerManager server, ICakeLog log)
-                : base(server, log)
+            public WebsiteManager(ICakeEnvironment environment, ICakeLog log)
+                : base(environment, log)
             {
 
             }
@@ -23,9 +24,13 @@ namespace Cake.IIS
 
 
         #region Functions (2)
-            public static WebsiteManager Using(ServerManager server, ICakeLog log)
+            public static WebsiteManager Using(ICakeEnvironment environment, ICakeLog log, ServerManager server)
             {
-                return new WebsiteManager(server, log);
+                WebsiteManager manager = new WebsiteManager(environment, log);
+
+                manager.SetServer(server);
+
+                return manager;
             }
 
 
@@ -37,8 +42,8 @@ namespace Cake.IIS
                 
                 if (!exists)
                 {
-                    this.Server.CommitChanges();
-                    this.Log.Information("Web Site '{0}' created.", settings.Name);
+                    _Server.CommitChanges();
+                    _Log.Information("Web Site '{0}' created.", settings.Name);
                 }
             }
         #endregion

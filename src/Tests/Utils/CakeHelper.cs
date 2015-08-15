@@ -1,8 +1,13 @@
 ﻿#region Using Statements
     using System;
     using System.Linq;
+    using System.IO;
+    using System.Threading;
 
+    using Cake.Core;
     using Microsoft.Web.Administration;
+
+    using NSubstitute;
 #endregion
 
 
@@ -12,20 +17,31 @@ namespace Cake.IIS.Tests.Utils
     internal static class CakeHelper
     {
         #region Functions (4)
+            //Cake
+            public static ICakeEnvironment CreateEnvironment()
+            {
+                var environment = Substitute.For<ICakeEnvironment>();
+                environment.WorkingDirectory = Directory.GetCurrentDirectory();
+
+                return environment;
+            }
+
+
+
             //Managers
             public static ApplicationPoolManager CreateApplicationPoolManager()
             {
-                return new ApplicationPoolManager(new ServerManager(), new DebugLog());
+                return new ApplicationPoolManager(CakeHelper.CreateEnvironment(), new DebugLog());
             }
 
             public static FtpsiteManager CreateFtpsiteManager()
             {
-                return new FtpsiteManager(new ServerManager(), new DebugLog());
+                return new FtpsiteManager(CakeHelper.CreateEnvironment(), new DebugLog());
             }
 
             public static WebsiteManager CreateWebsiteManager()
             {
-                return new WebsiteManager(new ServerManager(), new DebugLog());
+                return new WebsiteManager(CakeHelper.CreateEnvironment(), new DebugLog());
             }
 
 
@@ -35,13 +51,16 @@ namespace Cake.IIS.Tests.Utils
             {
                 return new ApplicationPoolSettings
                 {
-                    Name = "superman.web",
+                    Name = "Superman",
+                    IdentityType = IdentityType.NetworkService,
                     Autostart = true,
                     MaxProcesses = 1,
                     Enable32BitAppOnWin64 = false,
+
                     IdleTimeout = TimeSpan.FromMinutes(20),
                     ShutdownTimeLimit = TimeSpan.FromSeconds(90),
                     StartupTimeLimit = TimeSpan.FromSeconds(90),
+
                     PingingEnabled = true,
                     PingInterval = TimeSpan.FromSeconds(30),
                     PingResponseTime = TimeSpan.FromSeconds(90),
@@ -53,11 +72,11 @@ namespace Cake.IIS.Tests.Utils
             {
                 return new WebsiteSettings
                 {
-                    Name = "superman.web",
+                    Name = "Superman",
                     BindingProtocol = BindingProtocol.Http,
                     HostName = "superman.web",
-                    PhysicalPath = "./",
-                    ApplicationPool = GetAppPoolSettings(),
+                    PhysicalDirectory = "./Test/",
+                    ApplicationPool = CakeHelper.GetAppPoolSettings(),
                     Port = 80,
                     ServerAutoStart = true,
                     Overwrite = false
@@ -104,7 +123,14 @@ namespace Cake.IIS.Tests.Utils
 
                     if (site != null)
                     {
-                        site.Start();
+                        try
+                        {
+                            site.Start();
+                        }
+                        catch (System.Runtime.InteropServices.COMException)
+                        {
+                            Thread.Sleep(1000);
+                        }
                     }
                 }
             }
@@ -117,7 +143,14 @@ namespace Cake.IIS.Tests.Utils
 
                     if (site != null)
                     {
-                        site.Stop();
+                        try
+                        {
+                            site.Stop();
+                        }
+                        catch (System.Runtime.InteropServices.COMException)
+                        {
+                            Thread.Sleep(1000);
+                        }
                     }
                 }
             }
@@ -162,7 +195,14 @@ namespace Cake.IIS.Tests.Utils
 
                     if (pool != null)
                     {
-                        pool.Start();
+                        try
+                        {
+                            pool.Start();
+                        }
+                        catch (System.Runtime.InteropServices.COMException)
+                        {
+                            Thread.Sleep(1000);
+                        }
                     }
                 }
             }
@@ -175,7 +215,14 @@ namespace Cake.IIS.Tests.Utils
 
                     if (pool != null)
                     {
-                        pool.Stop();
+                        try
+                        {
+                            pool.Stop();
+                        }
+                        catch (System.Runtime.InteropServices.COMException)
+                        {
+                            Thread.Sleep(1000);
+                        }
                     }
                 }
             }

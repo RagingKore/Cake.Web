@@ -22,10 +22,12 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static void CreateFtpsite(this ICakeContext context, string server, FtpsiteSettings settings)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
+                settings.ComputerName = server;
+
                 FtpsiteManager
-                    .Using(manager, context.Log)
+                    .Using(context.Environment, context.Log, manager)
                     .Create(settings);
             }
         }

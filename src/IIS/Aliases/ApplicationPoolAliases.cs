@@ -22,10 +22,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static bool PoolExists(this ICakeContext context, string server, string name)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 return ApplicationPoolManager
-                        .Using(manager, context.Log)
+                        .Using(context.Environment, context.Log, manager)
                         .Exists(name);
             }
         }
@@ -41,11 +41,11 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static void CreatePool(this ICakeContext context, string server, ApplicationPoolSettings settings)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 ApplicationPoolManager
-                    .Using(manager, context.Log)
-                    .Create(settings);
+                        .Using(context.Environment, context.Log, manager)
+                        .Create(settings);
             }
         }
 
@@ -60,10 +60,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static bool DeletePool(this ICakeContext context, string server, string name)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 return ApplicationPoolManager
-                        .Using(manager, context.Log)
+                        .Using(context.Environment, context.Log, manager)
                         .Delete(name);
             }
         }
@@ -79,10 +79,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static bool StartPool(this ICakeContext context, string server, string name)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 return ApplicationPoolManager
-                        .Using(manager, context.Log)
+                        .Using(context.Environment, context.Log, manager)
                         .Start(name);
             }
         }
@@ -98,10 +98,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static bool StopPool(this ICakeContext context, string server, string name)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 return ApplicationPoolManager
-                        .Using(manager, context.Log)
+                        .Using(context.Environment, context.Log, manager)
                         .Stop(name);
             }
         }
@@ -117,10 +117,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static bool RecyclePool(this ICakeContext context, string server, string name)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 return ApplicationPoolManager
-                        .Using(manager, context.Log)
+                        .Using(context.Environment, context.Log, manager)
                         .Recycle(name);
             }
         }

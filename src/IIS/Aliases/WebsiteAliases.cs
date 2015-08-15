@@ -22,10 +22,12 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static void CreateWebsite(this ICakeContext context, string server, WebsiteSettings settings)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
+                settings.ComputerName = server;
+
                 WebsiteManager
-                    .Using(manager, context.Log)
+                    .Using(context.Environment, context.Log, manager)
                     .Create(settings);
             }
         }

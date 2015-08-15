@@ -1,10 +1,14 @@
 #region Using Statements
     using System;
     using System.Linq;
+    using System.Threading;
 
+    using Cake.Core;
+    using Cake.Core.IO;
+    using Cake.Core.IO.Arguments;
     using Cake.Core.Diagnostics;
 
-    using Microsoft.Web.Administration;
+using Microsoft.Web.Administration;
 #endregion
 
 
@@ -14,8 +18,8 @@ namespace Cake.IIS
     public abstract class BaseSiteManager : BaseManager
     {
         #region Constructor (1)
-            public BaseSiteManager(ServerManager server, ICakeLog log)
-                : base(server, log)
+            public BaseSiteManager(ICakeEnvironment environment, ICakeLog log)
+                : base(environment, log)
             {
 
             }
@@ -46,25 +50,27 @@ namespace Cake.IIS
 
 
                 //Get Site
-                Site site = this.Server.Sites.FirstOrDefault(p => p.Name == settings.Name);
+                Site site = _Server.Sites.FirstOrDefault(p => p.Name == settings.Name);
 
                 if (site != null)
                 {
-                    exists = true;
-                    this.Log.Information("Site '{0}' already exists.", settings.Name);
+                    _Log.Information("Site '{0}' already exists.", settings.Name);
 
                     if (settings.Overwrite)
                     {
-                        this.Log.Information("Site '{0}' will be overriden by request.", settings.Name);
+                        _Log.Information("Site '{0}' will be overriden by request.", settings.Name);
 
                         this.Delete(settings.Name);
 
                         ApplicationPoolManager
-                            .Using(this.Server, this.Log)
+                            .Using(_Environment, _Log, _Server)
                             .Delete(site.ApplicationDefaults.ApplicationPoolName);
+
+                        exists = false;
                     }
                     else
                     {
+                        exists = true;
                         return site;
                     }
                 }
@@ -77,17 +83,19 @@ namespace Cake.IIS
 
                 //Create Pool
                 ApplicationPoolManager
-                    .Using(this.Server, this.Log)
+                    .Using(_Environment, _Log, _Server)
                     .Create(settings.ApplicationPool);
 
 
 
                 //Site Settings
-                site = this.Server.Sites.Add(
+                this.SetWorkingDirectory(settings);
+
+                site = _Server.Sites.Add(
                     settings.Name,
                     settings.BindingProtocol.ToString().ToLower(),
                     settings.BindingInformation,
-                    settings.PhysicalPath);
+                    settings.PhysicalDirectory.MakeAbsolute(settings.WorkingDirectory).FullPath);
 
                 if (settings.CertificateHash != null)
                 {
@@ -130,7 +138,7 @@ namespace Cake.IIS
 
                     anonymousAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableAnonymousAuthentication);
 
-                    this.Log.Information("Anonymous Authentication enabled: {0}", settings.Authentication.EnableAnonymousAuthentication);
+                    _Log.Information("Anonymous Authentication enabled: {0}", settings.Authentication.EnableAnonymousAuthentication);
 
 
 
@@ -145,7 +153,7 @@ namespace Cake.IIS
                     basicAuthentication.SetAttributeValue("userName", settings.Authentication.Username);
                     basicAuthentication.SetAttributeValue("password", settings.Authentication.Password);
 
-                    this.Log.Information("Basic Authentication enabled: {0}", settings.Authentication.EnableBasicAuthentication);
+                    _Log.Information("Basic Authentication enabled: {0}", settings.Authentication.EnableBasicAuthentication);
 
 
 
@@ -158,7 +166,7 @@ namespace Cake.IIS
 
                     windowsAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableWindowsAuthentication);
 
-                    this.Log.Information("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
+                    _Log.Information("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
                 }
 
                 return site;
@@ -166,18 +174,19 @@ namespace Cake.IIS
 
             public bool Delete(string name)
             {
-                var site = this.Server.Sites.FirstOrDefault(p => p.Name == name);
+                var site = _Server.Sites.FirstOrDefault(p => p.Name == name);
 
                 if (site == null)
                 {
-                    this.Log.Information("Site '{0}' not found.", name);
+                    _Log.Information("Site '{0}' not found.", name);
                     return true;
                 }
                 else
                 {
-                    this.Server.Sites.Remove(site);
-                    this.Server.CommitChanges();
-                    this.Log.Information("Site '{0}' deleted.", site.Name);
+                    _Server.Sites.Remove(site);
+                    _Server.CommitChanges();
+
+                    _Log.Information("Site '{0}' deleted.", site.Name);
                     return false;
                 }
             }
@@ -186,62 +195,66 @@ namespace Cake.IIS
 
             public bool Start(string name)
             {
-                var site = this.Server.Sites.FirstOrDefault(p => p.Name == name);
+                var site = _Server.Sites.FirstOrDefault(p => p.Name == name);
 
-                if(site != null)
+                if (site == null)
                 {
-                    ObjectState state;
-
-                    do
-                    {
-                        this.Log.Information("Site '{0}' starting...", site.Name);
-                        state = site.Start();   
-                    }
-                    while(state != ObjectState.Started);
-
-                    this.Log.Information("Site '{0}' started.", site.Name);
-                    return true;
+                    _Log.Information("Site '{0}' not found.", name);
+                    return false;
                 }
                 else
                 {
-                    return false;
+                    try
+                    {
+                        site.Start();
+                    }
+                    catch (System.Runtime.InteropServices.COMException e)
+                    {
+                        _Log.Information("Waiting for IIS to activate new config");
+                        Thread.Sleep(1000);
+                    }
+
+                    _Log.Information("Site '{0}' started.", site.Name);
+                    return true;
                 }
             }
 
             public bool Stop(string name)
             {
-                var site = this.Server.Sites.FirstOrDefault(p => p.Name == name);
+                var site = _Server.Sites.FirstOrDefault(p => p.Name == name);
 
-                if (site != null)
+                if (site == null)
                 {
-                    ObjectState state;
-
-                    do
-                    {
-                        this.Log.Information("Site '{0}' stopping...", site.Name);
-                        state = site.Stop();
-                    }
-                    while (state != ObjectState.Stopped);
-
-                    this.Log.Information("Site '{0}' stopped.", site.Name);
-                    return true;
+                    _Log.Information("Site '{0}' not found.", name);
+                    return false;
                 }
                 else
                 {
-                    return false;
+                    try
+                    {
+                        site.Stop();
+                    }
+                    catch (System.Runtime.InteropServices.COMException e)
+                    {
+                        _Log.Information("Waiting for IIS to activate new config");
+                        Thread.Sleep(1000);
+                    }
+
+                    _Log.Information("Site '{0}' stopped.", site.Name);
+                    return true;
                 }
             }
 
             public bool Exists(string name)
             {
-                if (this.Server.Sites.SingleOrDefault(p => p.Name == name) != null)
+                if (_Server.Sites.SingleOrDefault(p => p.Name == name) != null)
                 {
-                    this.Log.Information("The site '{0}' exists.", name);
+                    _Log.Information("The site '{0}' exists.", name);
                     return true;
                 }
                 else
                 {
-                    this.Log.Information("The site '{0}' does not exist.", name);
+                    _Log.Information("The site '{0}' does not exist.", name);
                     return false;
                 }
             }
@@ -263,7 +276,7 @@ namespace Cake.IIS
 
 
                 //Get Site
-                Site site = this.Server.Sites.SingleOrDefault(p => p.Name == settings.Name);
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.Name);
 
                 if (site != null)
                 {
@@ -284,9 +297,9 @@ namespace Cake.IIS
                     newBinding.BindingInformation = settings.BindingInformation;
 
                     site.Bindings.Add(newBinding);
-                    this.Server.CommitChanges();
+                    _Server.CommitChanges();
 
-                    this.Log.Information("Binding added.");
+                    _Log.Information("Binding added.");
                     return true;
                 }
                 else
@@ -309,7 +322,7 @@ namespace Cake.IIS
 
 
 
-                Site site = this.Server.Sites.SingleOrDefault(p => p.Name == settings.Name);
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.Name);
 
                 if (site != null)
                 {
@@ -328,14 +341,14 @@ namespace Cake.IIS
                     if (binding != null)
                     {
                         site.Bindings.Remove(binding);
-                        this.Server.CommitChanges();
+                        _Server.CommitChanges();
 
-                        this.Log.Information("Binding removed.");
+                        _Log.Information("Binding removed.");
                         return true;
                     }
                     else
                     {
-                        this.Log.Information("A binding with the same ip, port and host header does not exists.");
+                        _Log.Information("A binding with the same ip, port and host header does not exists.");
                         return false;
                     }
                 }
@@ -367,7 +380,7 @@ namespace Cake.IIS
 
 
                 //Get Pool
-                ApplicationPool appPool = this.Server.ApplicationPools.SingleOrDefault(p => p.Name == settings.ApplicationPool);
+                ApplicationPool appPool = _Server.ApplicationPools.SingleOrDefault(p => p.Name == settings.ApplicationPool);
 
                 if (appPool == null)
                 {
@@ -377,7 +390,7 @@ namespace Cake.IIS
 
 
                 //Get Site
-                Site site = this.Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
 
                 if (site != null)
                 {
@@ -418,7 +431,7 @@ namespace Cake.IIS
                     }
 
                     site.Applications.Add(app);
-                    this.Server.CommitChanges();
+                    _Server.CommitChanges();
 
                     return true;
                 }
@@ -448,7 +461,7 @@ namespace Cake.IIS
 
 
                 //Get Pool
-                ApplicationPool appPool = this.Server.ApplicationPools.SingleOrDefault(p => p.Name == settings.ApplicationPool);
+                ApplicationPool appPool = _Server.ApplicationPools.SingleOrDefault(p => p.Name == settings.ApplicationPool);
 
                 if (appPool == null)
                 {
@@ -458,7 +471,7 @@ namespace Cake.IIS
 
 
                 //Get Site
-                Site site = this.Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
 
                 if (site != null)
                 {
@@ -472,7 +485,7 @@ namespace Cake.IIS
                     else
                     {
                         site.Applications.Remove(app);
-                        this.Server.CommitChanges();
+                        _Server.CommitChanges();
 
                         return true;
                     }

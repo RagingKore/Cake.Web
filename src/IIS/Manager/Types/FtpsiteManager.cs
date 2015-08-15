@@ -1,6 +1,7 @@
 #region Using Statements
     using Microsoft.Web.Administration;
 
+    using Cake.Core;
     using Cake.Core.Diagnostics;
 #endregion
 
@@ -11,8 +12,8 @@ namespace Cake.IIS
     public class FtpsiteManager : BaseSiteManager
     {
         #region Constructor (1)
-            public FtpsiteManager(ServerManager server, ICakeLog log)
-                : base(server, log)
+            public FtpsiteManager(ICakeEnvironment environment, ICakeLog log)
+                : base(environment, log)
             {
 
             }
@@ -23,9 +24,13 @@ namespace Cake.IIS
 
 
         #region Fucntions (2)
-            public static FtpsiteManager Using(ServerManager server, ICakeLog log)
+            public static FtpsiteManager Using(ICakeEnvironment environment, ICakeLog log, ServerManager server)
             {
-                return new FtpsiteManager(server, log);
+                FtpsiteManager manager = new FtpsiteManager(environment, log);
+
+                manager.SetServer(server);
+
+                return manager;
             }
 
 
@@ -52,14 +57,15 @@ namespace Cake.IIS
 
 
                     // Host name support
-                    var hostNameSupport = this.Server
+                    var hostNameSupport = _Server
                         .GetApplicationHostConfiguration()
                         .GetSection("system.ftpServer/serverRuntime")
                         .GetChildElement("hostNameSupport");
 
                     hostNameSupport.SetAttributeValue("useDomainNameAsHostName", true);
 
-                    this.Log.Information("Ftp Site '{0}' created.", settings.Name);
+                    _Server.CommitChanges();
+                    _Log.Information("Ftp Site '{0}' created.", settings.Name);
                 }
             }
         #endregion

@@ -1,6 +1,8 @@
 #region Using Statements
     using System;
 
+    using Cake.Core;
+    using Cake.Core.IO;
     using Cake.Core.Diagnostics;
 
     using Microsoft.Web.Administration;
@@ -12,9 +14,11 @@ namespace Cake.IIS
 {
     public abstract class BaseManager
     {
-        #region Fields (2)
-            protected readonly ServerManager Server;
-            protected readonly ICakeLog Log;
+        #region Fields (3)
+            protected readonly ICakeEnvironment _Environment;
+            protected readonly ICakeLog _Log;
+
+            protected ServerManager _Server;
         #endregion
 
 
@@ -22,19 +26,64 @@ namespace Cake.IIS
 
 
         #region Constructor (1)
-            public BaseManager(ServerManager server, ICakeLog log)
+            public BaseManager(ICakeEnvironment environment, ICakeLog log)
             {
-                if (server == null)
+                if (environment == null)
                 {
-                    throw new ArgumentNullException("server");
+                    throw new ArgumentNullException("environment");
                 }
                 if (log == null)
                 {
                     throw new ArgumentNullException("log");
                 }
 
-                this.Server = server;
-                this.Log = log;
+                _Environment = environment;
+                _Log = log;
+            }
+        #endregion
+
+
+
+
+
+        #region Constructor (3)
+            public static ServerManager Connect(string server)
+            {
+                if (String.IsNullOrEmpty(server))
+                {
+                    return new ServerManager();
+                }
+                else
+                {
+                    return ServerManager.OpenRemote(server);
+                }
+            }
+
+
+
+            public void SetServer(ServerManager manager)
+            {
+                if (manager == null)
+                {
+                    throw new ArgumentNullException("manager");
+                }
+
+                _Server = manager;
+            }
+
+
+            protected void SetWorkingDirectory(SiteSettings settings)
+            {
+                if (String.IsNullOrEmpty(settings.ComputerName))
+                {
+                    DirectoryPath workingDirectory = settings.WorkingDirectory ?? _Environment.WorkingDirectory;
+
+                    settings.WorkingDirectory = workingDirectory.MakeAbsolute(_Environment);
+                }
+                else if (settings.WorkingDirectory == null)
+                {
+                    settings.WorkingDirectory = new DirectoryPath("C:/");
+                }
             }
         #endregion
     }

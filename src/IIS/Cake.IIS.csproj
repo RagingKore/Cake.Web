@@ -65,7 +65,6 @@
     <Compile Include="Settings\SiteSettings.cs" />
     <Compile Include="Manager\Types\WebsiteManager.cs" />
     <Compile Include="Settings\WebsiteSettings.cs" />
-    <Compile Include="Manager\Server\IISManager.cs" />
     <Compile Include="Aliases\SiteAliases.cs" />
   </ItemGroup>
   <ItemGroup>

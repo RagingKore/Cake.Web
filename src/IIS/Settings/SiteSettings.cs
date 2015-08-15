@@ -1,15 +1,9 @@
-﻿namespace Cake.IIS
+﻿using Cake.Core.IO;
+
+namespace Cake.IIS
 {
     public abstract class SiteSettings : BindingSettings
     {
-        #region Fields (1)
-            private string _PhysicalPath;
-        #endregion
-
-
-
-
-
         #region Constructor (1)
             public SiteSettings()
                 : base()
@@ -26,18 +20,11 @@
 
 
         #region Properties (10)
-            public string PhysicalPath
-            {
-                get
-                {
-                    return _PhysicalPath;
-                }
+            public string ComputerName { get; set; }
 
-                set
-                {
-                    _PhysicalPath = value.Replace("/", @"\");
-                }
-            }
+            public DirectoryPath WorkingDirectory { get; set; }
+
+            public DirectoryPath PhysicalDirectory { get; set; }
 
 
 

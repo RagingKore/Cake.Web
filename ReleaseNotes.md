@@ -1,3 +1,10 @@
+### New in 0.0.6 (Released 2015/08/14)
+* AppVeyor install script for IIS and WAS
+* Renamed PhysicalPath to PhysicalDirectory in SiteSettings
+* Use DirectoryPath instead of string to allow for paths relative to the working directory
+* Change manager constructors to include the cake environment
+* Add Thread.Sleep exception to start / Stop methods to take into account for IIS delays
+
 ### New in 0.0.5 (Released 2015/08/13)
 * New UnitTests and Bugfixes by Jake Scott
 * AppPool TimeSpan checks

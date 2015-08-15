@@ -22,10 +22,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static bool SiteExists(this ICakeContext context, string server, string name)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 return WebsiteManager
-                        .Using(manager, context.Log)
+                        .Using(context.Environment, context.Log, manager)
                         .Exists(name);
             }
         }
@@ -41,10 +41,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static bool DeleteSite(this ICakeContext context, string server, string name)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 return WebsiteManager
-                        .Using(manager, context.Log)
+                        .Using(context.Environment, context.Log, manager)
                         .Delete(name);
             }
         }
@@ -60,10 +60,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static bool StartSite(this ICakeContext context, string server, string name)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 return WebsiteManager
-                        .Using(manager, context.Log)
+                        .Using(context.Environment, context.Log, manager)
                         .Start(name);
             }
         }
@@ -79,10 +79,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static bool StopSite(this ICakeContext context, string server, string name)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 return WebsiteManager
-                        .Using(manager, context.Log)
+                        .Using(context.Environment, context.Log, manager)
                         .Stop(name);
             }
         }
@@ -98,10 +98,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static void AddSiteBinding(this ICakeContext context, string server, WebsiteSettings settings)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 WebsiteManager
-                    .Using(manager, context.Log)
+                    .Using(context.Environment, context.Log, manager)
                     .AddBinding(settings);
             }
         }
@@ -117,10 +117,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static void RemoveSiteBinding(this ICakeContext context, string server, WebsiteSettings settings)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 WebsiteManager
-                    .Using(manager, context.Log)
+                    .Using(context.Environment, context.Log, manager)
                     .AddBinding(settings);
             }
         }
@@ -136,10 +136,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static void AddSiteApplication(this ICakeContext context, string server, ApplicationSettings settings)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 WebsiteManager
-                    .Using(manager, context.Log)
+                    .Using(context.Environment, context.Log, manager)
                     .AddApplication(settings);
             }
         }
@@ -155,10 +155,10 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static void RemoveSiteApplication(this ICakeContext context, string server, ApplicationSettings settings)
         {
-            using (ServerManager manager = IISManager.Connect(server))
+            using (ServerManager manager = BaseManager.Connect(server))
             {
                 WebsiteManager
-                    .Using(manager, context.Log)
+                    .Using(context.Environment, context.Log, manager)
                     .AddApplication(settings);
             }
         }

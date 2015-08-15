@@ -45,7 +45,7 @@ namespace Cake.IIS.Tests
             // Arrange
             var settings = CakeHelper.GetWebsiteSettings();
 
-            CakeHelper.CreateWebsiteManager().Create(settings);
+            CakeHelper.CreateWebsite(settings);
             CakeHelper.StopWebsite(settings.Name);
 
             // Act
@@ -64,7 +64,7 @@ namespace Cake.IIS.Tests
             // Arrange
             var settings = CakeHelper.GetWebsiteSettings();
 
-            CakeHelper.CreateWebsiteManager().Create(settings);
+            CakeHelper.CreateWebsite(settings);
             CakeHelper.StartWebsite(settings.Name);
 
             // Act
