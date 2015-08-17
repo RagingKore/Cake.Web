@@ -1,6 +1,12 @@
+#region Using Statements
+    using Cake.Core.IO;
+#endregion
+
+
+
 namespace Cake.IIS
 {
-    public class ApplicationSettings
+    public class ApplicationSettings : IDirectorySettings
     {
         #region Constructor (1)
             public ApplicationSettings()
@@ -13,7 +19,11 @@ namespace Cake.IIS
 
 
 
-        #region Properties (7)
+        #region Properties (9)
+            public string ComputerName { get; set; }
+
+
+
             public string SiteName { get; set; }
 
             public string ApplicationPath { get; set; }
@@ -24,9 +34,11 @@ namespace Cake.IIS
                 
 
 
-            public string VirtualDirectoryPath { get; set; }
-                        
-            public string PhysicalPath { get; set; }
+            public string VirtualDirectory { get; set; }
+
+            public DirectoryPath WorkingDirectory { get; set; }
+
+            public DirectoryPath PhysicalDirectory { get; set; }
           
 
 

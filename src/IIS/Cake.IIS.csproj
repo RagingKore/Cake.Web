@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Aliases\FtpsiteAliases.cs" />
     <Compile Include="Aliases\ApplicationPoolAliases.cs" />
+    <Compile Include="Interfaces\IDirectorySettings.cs" />
     <Compile Include="Manager\Base\BaseManager.cs" />
     <Compile Include="Manager\Types\ApplicationPoolManager.cs" />
     <Compile Include="Settings\ApplicationSettings.cs" />

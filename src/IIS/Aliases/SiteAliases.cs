@@ -138,6 +138,8 @@ namespace Cake.IIS
         {
             using (ServerManager manager = BaseManager.Connect(server))
             {
+                settings.ComputerName = server;
+
                 WebsiteManager
                     .Using(context.Environment, context.Log, manager)
                     .AddApplication(settings);

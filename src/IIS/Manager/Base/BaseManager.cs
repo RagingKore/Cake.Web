@@ -83,7 +83,7 @@ namespace Cake.IIS
 
 
 
-            protected void SetWorkingDirectory(SiteSettings settings)
+            protected string GetPhysicalDirectory(IDirectorySettings settings)
             {
                 if (String.IsNullOrEmpty(settings.ComputerName))
                 {
@@ -95,6 +95,9 @@ namespace Cake.IIS
                 {
                     settings.WorkingDirectory = new DirectoryPath("C:/");
                 }
+
+                var path = settings.PhysicalDirectory.MakeAbsolute(settings.WorkingDirectory).FullPath;
+                return path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
             }
         #endregion
     }

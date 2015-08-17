@@ -1,8 +1,12 @@
-﻿using Cake.Core.IO;
+﻿#region Using Statements
+    using Cake.Core.IO;
+#endregion
+
+
 
 namespace Cake.IIS
 {
-    public abstract class SiteSettings : BindingSettings
+    public abstract class SiteSettings : BindingSettings, IDirectorySettings
     {
         #region Constructor (1)
             public SiteSettings()

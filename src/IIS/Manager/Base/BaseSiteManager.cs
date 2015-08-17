@@ -4,11 +4,9 @@
     using System.Threading;
 
     using Cake.Core;
-    using Cake.Core.IO;
-    using Cake.Core.IO.Arguments;
     using Cake.Core.Diagnostics;
 
-using Microsoft.Web.Administration;
+    using Microsoft.Web.Administration;
 #endregion
 
 
@@ -89,18 +87,11 @@ namespace Cake.IIS
 
 
                 //Site Settings
-                this.SetWorkingDirectory(settings);
-
-                var path = settings.PhysicalDirectory.MakeAbsolute(settings.WorkingDirectory).FullPath;
-
-                // Fix path so that it works in IIS.
-                path = path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
-
                 site = _Server.Sites.Add(
                     settings.Name,
                     settings.BindingProtocol.ToString().ToLower(),
                     settings.BindingInformation,
-                    path);
+                    this.GetPhysicalDirectory(settings));
 
                 if (settings.CertificateHash != null)
                 {
@@ -416,8 +407,8 @@ namespace Cake.IIS
 
                         //Get Directory
                         VirtualDirectory vDir = app.VirtualDirectories.CreateElement();
-                        vDir.Path = settings.VirtualDirectoryPath;
-                        vDir.PhysicalPath = settings.PhysicalPath;
+                        vDir.Path = settings.VirtualDirectory;
+                        vDir.PhysicalPath = this.GetPhysicalDirectory(settings);
 
                         if (!string.IsNullOrEmpty(settings.UserName))
                         {
