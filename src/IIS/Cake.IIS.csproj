@@ -46,11 +46,14 @@
   <ItemGroup>
     <Compile Include="Aliases\FtpsiteAliases.cs" />
     <Compile Include="Aliases\ApplicationPoolAliases.cs" />
+    <Compile Include="Aliases\WebFarmAliases.cs" />
     <Compile Include="Interfaces\IDirectorySettings.cs" />
     <Compile Include="Manager\Base\BaseManager.cs" />
     <Compile Include="Manager\Types\ApplicationPoolManager.cs" />
+    <Compile Include="Manager\Types\WebFarmManager.cs" />
     <Compile Include="Settings\ApplicationSettings.cs" />
     <Compile Include="Settings\BindingSettings.cs" />
+    <Compile Include="Settings\WebFarmSettings.cs" />
     <Compile Include="Types\IdentityType.cs" />
     <Compile Include="Settings\ApplicationPoolSettings.cs" />
     <Compile Include="Settings\AuthenticationSettings.cs" />

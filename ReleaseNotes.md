@@ -1,6 +1,7 @@
 ### New in 0.0.7 (Released 2015/08/17)
 * Path fixes by Jake Scott
 * Use GetPhysicalDirectory for ApplicationSettings and WebsiteSettings
+* WebFarm Aliases
 
 ### New in 0.0.6 (Released 2015/08/14)
 * AppVeyor install script for IIS and WAS

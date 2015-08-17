@@ -46,6 +46,7 @@ or directly in your build script via a cake addin:
 
 ```csharp
 #addin "Cake.IIS"
+#addin "Microsoft.Web.Administration"
 
 
 Task("ApplicationPool-Create")
@@ -106,6 +107,33 @@ Task("Website-Start")
     .Does(() =>
 {
     StartWebsite("MyBlog");
+});
+
+
+
+Task("WebFarm-Create")
+    .Description("Create a WebFarm")
+    .Does(() =>
+{
+    CreateWebFarm("remote-server-name", new WebFarmSettings()
+    {
+        Name = "Batman",
+        Servers = new string[] { "Gotham", "Metroplis" }
+    });
+});
+
+Task("WebFarm-Server-Available")
+    .Description("Sets a WebFarm server as available")
+    .Does(() =>
+{
+    SetServerAvailable("Gotham", "Metroplis");
+});
+
+Task("WebFarm-Server-Unavailable")
+    .Description("Sets a WebFarm server as unavailable")
+    .Does(() =>
+{
+    SetServerUnavailable("Gotham", "Metroplis");
 });
 
 

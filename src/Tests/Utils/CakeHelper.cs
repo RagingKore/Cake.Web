@@ -55,6 +55,15 @@ namespace Cake.IIS.Tests.Utils
 
                 return manager;
             }
+        
+            public static WebFarmManager CreateWebFarmManager()
+            {
+                WebFarmManager manager = new WebFarmManager(CakeHelper.CreateEnvironment(), new DebugLog());
+
+                manager.SetServer();
+
+                return manager;
+            }
 
 
 
@@ -95,7 +104,16 @@ namespace Cake.IIS.Tests.Utils
                 };
             }
 
-            
+            public static WebFarmSettings GetWebFarmSettings()
+            {
+                return new WebFarmSettings
+                {
+                    Name = "Batman",
+                    Servers = new string[] { "Gotham", "Metroplis" }
+                };
+            }
+
+
 
             //Website
             public static void CreateWebsite(WebsiteSettings settings)
@@ -238,6 +256,49 @@ namespace Cake.IIS.Tests.Utils
                     }
                 }
             }
+
+
+
+            //WebFarm
+            public static void CreateWebFarm(WebFarmSettings settings)
+            {
+                WebFarmManager manager = CakeHelper.CreateWebFarmManager();
+
+                manager.Create(settings);
+            }
+
+            public static void DeleteWebFarm(string name)
+            {
+                using (var serverManager = new ServerManager())
+                {
+                    Configuration config = serverManager.GetApplicationHostConfiguration();
+
+                    ConfigurationSection section = config.GetSection("webFarms");
+                    ConfigurationElementCollection farms = section.GetCollection();
+
+                    ConfigurationElement farm = farms.FirstOrDefault(f => f.GetAttributeValue("name").ToString() == name);
+
+                    if (farm != null)
+                    {
+                        farms.Add(farm);
+                        serverManager.CommitChanges();
+                    }
+                }
+            }
+
+            public static ConfigurationElement GetWebFarm(string name)
+            {
+                using (var serverManager = new ServerManager())
+                {
+                    Configuration config = serverManager.GetApplicationHostConfiguration();
+
+                    ConfigurationSection section = config.GetSection("webFarms");
+                    ConfigurationElementCollection farms = section.GetCollection();
+
+                    return farms.FirstOrDefault(f => f.GetAttributeValue("name").ToString() == name);
+                }
+            }
+
         #endregion
     }
 }

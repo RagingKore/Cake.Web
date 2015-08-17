@@ -130,11 +130,12 @@ Task("Build")
     foreach(var solution in solutions)
     {
 		Information("Building {0}", solution);
-		MSBuild(solution, settings => 
-			settings.SetPlatformTarget(PlatformTarget.MSIL)
-				.WithProperty("TreatWarningsAsErrors","true")
-				.WithTarget("Build")
-				.SetConfiguration(configuration));
+		MSBuild(solution, settings =>
+        settings.SetConfiguration(configuration)
+            .WithProperty("TreatWarningsAsErrors", "true")
+            .UseToolVersion(MSBuildToolVersion.NET45)
+            .SetVerbosity(Verbosity.Minimal)
+            .SetNodeReuse(false));
     }
 });
 
