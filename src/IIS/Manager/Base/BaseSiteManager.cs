@@ -91,11 +91,16 @@ namespace Cake.IIS
                 //Site Settings
                 this.SetWorkingDirectory(settings);
 
+                var path = settings.PhysicalDirectory.MakeAbsolute(settings.WorkingDirectory).FullPath;
+
+                // Fix path so that it works in IIS.
+                path = path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
+
                 site = _Server.Sites.Add(
                     settings.Name,
                     settings.BindingProtocol.ToString().ToLower(),
                     settings.BindingInformation,
-                    settings.PhysicalDirectory.MakeAbsolute(settings.WorkingDirectory).FullPath);
+                    path);
 
                 if (settings.CertificateHash != null)
                 {
