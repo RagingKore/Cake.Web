@@ -110,13 +110,13 @@ namespace Cake.IIS
 
 
                 //Security
-                this.SetAuthentication(site, settings);
-                this.SetAuthorization(site, settings);
+                this.SetAuthentication(settings);
+                this.SetAuthorization(settings);
 
                 return site;
             }
 
-            protected void SetAuthentication(Site site, SiteSettings settings)
+            protected void SetAuthentication(SiteSettings settings)
             {
                 if (settings.Authentication != null)
                 {
@@ -135,10 +135,8 @@ namespace Cake.IIS
 
 
                     //Authentication
-                    var authentication = site
-                            .GetChildElement(server)
-                            .GetChildElement("security")
-                            .GetChildElement("authentication");
+                    var config = _Server.GetApplicationHostConfiguration();
+                    var authentication = config.GetSection("system." + server + "/security/authorization", settings.Name);
 
 
 
@@ -171,7 +169,7 @@ namespace Cake.IIS
                 }
             }
 
-            protected void SetAuthorization(Site site, SiteSettings settings)
+            protected void SetAuthorization(SiteSettings settings)
             {
                 if (settings.Authorization != null)
                 {
@@ -190,11 +188,8 @@ namespace Cake.IIS
 
 
                     //Authorization
-                    var authorization = site
-                                .GetChildElement(server)
-                                .GetChildElement("security")
-                                .GetChildElement("authorization");
-
+                    var config = _Server.GetApplicationHostConfiguration();
+                    var authorization = config.GetSection("system." + server + "/security/authorization", settings.Name);
                     var authCollection = authorization.GetCollection();
 
                     var addElement = authCollection.CreateElement("add");

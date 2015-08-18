@@ -16,7 +16,6 @@ namespace Cake.IIS
                 this.Overwrite = false;
 
                 this.ApplicationPool = new ApplicationPoolSettings();
-                this.Authorization = new AuthorizationSettings();
             }
         #endregion
 
