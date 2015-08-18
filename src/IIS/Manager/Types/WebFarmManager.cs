@@ -40,7 +40,7 @@ namespace Cake.IIS
 
 
             //Farms
-            public void Create(WebFarmSettings settings)
+            public bool Create(WebFarmSettings settings)
             {
                 if (settings == null)
                 {
@@ -54,10 +54,30 @@ namespace Cake.IIS
 
 
 
-                //Create Farm
+                //Get Farm
                 ConfigurationElementCollection farms = this.GetFarms();
+                ConfigurationElement farm = farms.FirstOrDefault(f => f.GetAttributeValue("name").ToString() == settings.Name);
 
-                ConfigurationElement farm = farms.CreateElement("webFarm");
+                if (farm != null)
+                {
+                    _Log.Information("WebFarm '{0}' already exists.", settings.Name);
+
+                    if (settings.Overwrite)
+                    {
+                        _Log.Information("WebFarm '{0}' will be overriden by request.", settings.Name);
+
+                        this.Delete(settings.Name);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+
+
+
+                //Create Farm
+                farm = farms.CreateElement("webFarm");
                 farm["name"] = settings.Name;
 
 

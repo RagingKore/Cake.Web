@@ -13,10 +13,14 @@
 
 
 
-        #region Properties (2)
+        #region Properties (3)
             public string Name { get; set; }
 
             public string[] Servers { get; set; }
+        
+
+
+            public bool Overwrite { get; set; }
         #endregion
     }
 }
