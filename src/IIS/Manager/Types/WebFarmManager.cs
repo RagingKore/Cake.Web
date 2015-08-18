@@ -40,7 +40,7 @@ namespace Cake.IIS
 
 
             //Farms
-            public bool Create(WebFarmSettings settings)
+            public void Create(WebFarmSettings settings)
             {
                 if (settings == null)
                 {
@@ -70,7 +70,7 @@ namespace Cake.IIS
                     }
                     else
                     {
-                        return true;
+                        return;
                     }
                 }
 
