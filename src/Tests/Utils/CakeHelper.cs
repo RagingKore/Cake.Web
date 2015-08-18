@@ -280,7 +280,7 @@ namespace Cake.IIS.Tests.Utils
 
                     if (farm != null)
                     {
-                        farms.Add(farm);
+                        farms.Remove(farm);
                         serverManager.CommitChanges();
                     }
                 }

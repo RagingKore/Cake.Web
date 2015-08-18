@@ -108,7 +108,7 @@ namespace Cake.IIS
 
                 if (farm != null)
                 {
-                    farms.Add(farm);
+                    farms.Remove(farm);
                     _Server.CommitChanges();
 
                     _Log.Information("WebFarm deleted.");
@@ -161,6 +161,11 @@ namespace Cake.IIS
                         _Log.Information("Adding server '{0}'.", address);
                         return true;
                     }
+                    else
+                    {
+                        _Log.Information("The server '{0}' already exists.", address);
+                        return false;
+                    }
                 }
 
                 return false;
@@ -183,6 +188,11 @@ namespace Cake.IIS
                         _Log.Information("Removed server '{0}'.", address);
                         return true;
                     }
+                    else
+                    {
+                        _Log.Information("The server '{0}' does not exists.", address);
+                        return false;
+                    }
                 }
 
                 return false;
@@ -197,7 +207,7 @@ namespace Cake.IIS
                     ConfigurationElementCollection servers = farmElement.GetCollection();
                     ConfigurationElement server = servers.FirstOrDefault(f => f.GetAttributeValue("address").ToString() == address);
 
-                    if (farm != null)
+                    if (server != null)
                     {
                         _Log.Information("The server '{0}' exists.", address);
                         return true;
