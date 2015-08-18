@@ -1,5 +1,6 @@
 #region Using Statements
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
 
@@ -108,7 +109,15 @@ namespace Cake.IIS
 
 
 
-                //Set Authentication
+                //Security
+                this.SetAuthentication(site, settings);
+                this.SetAuthorization(site, settings);
+
+                return site;
+            }
+
+            protected void SetAuthentication(Site site, SiteSettings settings)
+            {
                 if (settings.Authentication != null)
                 {
                     //Get Type
@@ -125,12 +134,16 @@ namespace Cake.IIS
 
 
 
+                    //Authentication
+                    var authentication = site
+                            .GetChildElement(server)
+                            .GetChildElement("security")
+                            .GetChildElement("authentication");
+
+
+
                     // Anonymous Authentication
-                    var anonymousAuthentication = site
-                        .GetChildElement(server)
-                        .GetChildElement("security")
-                        .GetChildElement("authentication")
-                        .GetChildElement("anonymousAuthentication");
+                    var anonymousAuthentication = authentication.GetChildElement("anonymousAuthentication");
 
                     anonymousAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableAnonymousAuthentication);
 
@@ -139,11 +152,7 @@ namespace Cake.IIS
 
 
                     // Basic Authentication
-                    var basicAuthentication = site
-                        .GetChildElement(server)
-                        .GetChildElement("security")
-                        .GetChildElement("authentication")
-                        .GetChildElement("basicAuthentication");
+                    var basicAuthentication = authentication.GetChildElement("basicAuthentication");
 
                     basicAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableBasicAuthentication);
                     basicAuthentication.SetAttributeValue("userName", settings.Authentication.Username);
@@ -154,19 +163,82 @@ namespace Cake.IIS
 
 
                     // Windows Authentication
-                    var windowsAuthentication = site
-                        .GetChildElement(server)
-                        .GetChildElement("security")
-                        .GetChildElement("authentication")
-                        .GetChildElement("windowsAuthentication");
+                    var windowsAuthentication = authentication.GetChildElement("windowsAuthentication");
 
                     windowsAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableWindowsAuthentication);
 
                     _Log.Information("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
                 }
-
-                return site;
             }
+
+            protected void SetAuthorization(Site site, SiteSettings settings)
+            {
+                if (settings.Authorization != null)
+                {
+                    //Get Type
+                    string server = "";
+
+                    if (settings is WebsiteSettings)
+                    {
+                        server = "webServer";
+                    }
+                    else
+                    {
+                        server = "ftpServer";
+                    }
+
+
+
+                    //Authorization
+                    var authorization = site
+                                .GetChildElement(server)
+                                .GetChildElement("security")
+                                .GetChildElement("authorization");
+
+                    var authCollection = authorization.GetCollection();
+
+                    var addElement = authCollection.CreateElement("add");
+                    addElement.SetAttributeValue("accessType", "Allow");
+
+                    switch (settings.Authorization.AuthorizationType)
+                    {
+                        case AuthorizationType.AllUsers:
+                            addElement.SetAttributeValue("users", "*");
+                            break;
+
+                        case AuthorizationType.SpecifiedUser:
+                            addElement.SetAttributeValue("users", string.Join(", ", settings.Authorization.Users));
+                            break;
+
+                        case AuthorizationType.SpecifiedRoleOrUserGroup:
+                            addElement.SetAttributeValue("roles", string.Join(", ", settings.Authorization.Roles));
+                            break;
+                    }
+
+
+
+                    //Permissions
+                    var permissions = new List<string>();
+
+                    if (settings.Authorization.CanRead)
+                    {
+                        permissions.Add("Read");
+                    }
+                    if (settings.Authorization.CanWrite)
+                    {
+                        permissions.Add("Write");
+                    }
+
+                    addElement.SetAttributeValue("permissions", string.Join(", ", permissions));
+
+                    authCollection.Clear();
+                    authCollection.Add(addElement);
+
+                    _Log.Information("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
+                }
+            }
+
+
 
             public bool Delete(string name)
             {
@@ -183,6 +255,20 @@ namespace Cake.IIS
                     _Server.CommitChanges();
 
                     _Log.Information("Site '{0}' deleted.", site.Name);
+                    return false;
+                }
+            }
+
+            public bool Exists(string name)
+            {
+                if (_Server.Sites.SingleOrDefault(p => p.Name == name) != null)
+                {
+                    _Log.Information("The site '{0}' exists.", name);
+                    return true;
+                }
+                else
+                {
+                    _Log.Information("The site '{0}' does not exist.", name);
                     return false;
                 }
             }
@@ -241,20 +327,6 @@ namespace Cake.IIS
                 }
             }
 
-            public bool Exists(string name)
-            {
-                if (_Server.Sites.SingleOrDefault(p => p.Name == name) != null)
-                {
-                    _Log.Information("The site '{0}' exists.", name);
-                    return true;
-                }
-                else
-                {
-                    _Log.Information("The site '{0}' does not exist.", name);
-                    return false;
-                }
-            }
-
 
 
             public bool AddBinding(BindingSettings settings)
@@ -276,12 +348,9 @@ namespace Cake.IIS
 
                 if (site != null)
                 {
-                    foreach (Binding b in site.Bindings)
+                    if (site.Bindings.FirstOrDefault(b => (b.Protocol == settings.BindingProtocol.ToString()) && (b.BindingInformation == settings.BindingInformation)) != null)
                     {
-                        if ((b.Protocol == settings.BindingProtocol.ToString()) && (b.BindingInformation == settings.BindingInformation))
-                        {
-                            throw new Exception("A binding with the same ip, port and host header already exists.");
-                        }
+                        throw new Exception("A binding with the same ip, port and host header already exists.");
                     }
 
 
@@ -318,24 +387,16 @@ namespace Cake.IIS
 
 
 
+                //Get Site
                 Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.Name);
 
                 if (site != null)
                 {
-                    Binding binding = null;
-
-                    foreach (Binding b in site.Bindings)
-                    {
-                        if ((b.Protocol == settings.BindingProtocol.ToString()) && (b.BindingInformation == settings.BindingInformation))
-                        {
-                            binding = b;
-                        }
-                    }
-
-
+                    Binding binding = site.Bindings.FirstOrDefault(b => (b.Protocol == settings.BindingProtocol.ToString()) && (b.BindingInformation == settings.BindingInformation));
 
                     if (binding != null)
                     {
+                        //Remove Binding
                         site.Bindings.Remove(binding);
                         _Server.CommitChanges();
 

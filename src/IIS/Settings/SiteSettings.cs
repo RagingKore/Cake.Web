@@ -16,6 +16,7 @@ namespace Cake.IIS
                 this.Overwrite = false;
 
                 this.ApplicationPool = new ApplicationPoolSettings();
+                this.Authorization = new AuthorizationSettings();
             }
         #endregion
 
@@ -34,9 +35,11 @@ namespace Cake.IIS
 
             public bool ServerAutoStart { get; set; }
 
+            public ApplicationPoolSettings ApplicationPool { get; set; }
+
             public AuthenticationSettings Authentication { get; set; }
 
-            public ApplicationPoolSettings ApplicationPool { get; set; }
+            public AuthorizationSettings Authorization { get; set; }
 
 
 

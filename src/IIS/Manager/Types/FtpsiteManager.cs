@@ -65,6 +65,7 @@ namespace Cake.IIS
                     hostNameSupport.SetAttributeValue("useDomainNameAsHostName", true);
 
                     _Server.CommitChanges();
+
                     _Log.Information("Ftp Site '{0}' created.", settings.Name);
                 }
             }

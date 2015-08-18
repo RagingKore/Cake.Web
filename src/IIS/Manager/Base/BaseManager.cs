@@ -46,7 +46,7 @@ namespace Cake.IIS
 
 
 
-        #region Constructor (3)
+        #region Constructor (5)
             public static ServerManager Connect(string server)
             {
                 if (String.IsNullOrEmpty(server))

@@ -62,7 +62,6 @@
     <Compile Include="Types\BindingProtocol.cs" />
     <Compile Include="Manager\Types\FtpsiteManager.cs" />
     <Compile Include="Settings\FtpsiteSettings.cs" />
-    <Compile Include="Extensions\ServerManagerExtensions.cs" />
     <Compile Include="Manager\Base\BaseSiteManager.cs" />
     <Compile Include="Aliases\WebsiteAliases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
