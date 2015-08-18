@@ -1,3 +1,9 @@
+### New in 0.0.8 (Released 2015/08/18)
+* Site AuthorizationSettings
+* Add / Remove SiteBindings using wrong settings
+* WebFarm tests
+* New Choco install script for AppVeyor
+
 ### New in 0.0.7 (Released 2015/08/17)
 * Path fixes by Jake Scott
 * Use GetPhysicalDirectory for ApplicationSettings and WebsiteSettings
