@@ -54,15 +54,9 @@ namespace Cake.IIS
 
 
 
-                //Get Farms
-                Configuration config = _Server.GetApplicationHostConfiguration();
-
-                ConfigurationSection section = config.GetSection("webFarms");
-                ConfigurationElementCollection farms = section.GetCollection();
-
-
-
                 //Create Farm
+                ConfigurationElementCollection farms = this.GetFarms();
+
                 ConfigurationElement farm = farms.CreateElement("webFarm");
                 farm["name"] = settings.Name;
 
@@ -89,11 +83,7 @@ namespace Cake.IIS
 
             public bool Delete(string name)
             {
-                Configuration config = _Server.GetApplicationHostConfiguration();
-
-                ConfigurationSection section = config.GetSection("webFarms");
-                ConfigurationElementCollection farms = section.GetCollection();
-
+                ConfigurationElementCollection farms = this.GetFarms();
                 ConfigurationElement farm = farms.FirstOrDefault(f => f.GetAttributeValue("name").ToString() == name);
 
                 if (farm != null)
@@ -113,11 +103,7 @@ namespace Cake.IIS
         
             public bool Exists(string name)
             {
-                Configuration config = _Server.GetApplicationHostConfiguration();
-
-                ConfigurationSection section = config.GetSection("webFarms");
-                ConfigurationElementCollection farms = section.GetCollection();
-
+                ConfigurationElementCollection farms = this.GetFarms();
                 ConfigurationElement farm = farms.FirstOrDefault(f => f.GetAttributeValue("name").ToString() == name);
 
                 if (farm != null)
@@ -316,13 +302,17 @@ namespace Cake.IIS
 
 
             //Helpers
-            private ConfigurationElement GetFarm(string name)
+            private ConfigurationElementCollection GetFarms()
             {
                 Configuration config = _Server.GetApplicationHostConfiguration();
-
                 ConfigurationSection section = config.GetSection("webFarms");
-                ConfigurationElementCollection farms = section.GetCollection();
 
+                return section.GetCollection();
+            }
+
+            private ConfigurationElement GetFarm(string name)
+            {
+                ConfigurationElementCollection farms = this.GetFarms();
                 ConfigurationElement farm = farms.FirstOrDefault(f => f.GetAttributeValue("name").ToString() == name);
 
                 if (farm == null)
@@ -336,7 +326,6 @@ namespace Cake.IIS
             private ConfigurationElement GetServer(ConfigurationElement farm, string address)
             {
                 ConfigurationElementCollection servers = farm.GetCollection();
-
                 ConfigurationElement server = servers.FirstOrDefault(f => f.GetAttributeValue("address").ToString() == address);
 
                 if (server != null)
