@@ -90,13 +90,13 @@ namespace Cake.IIS
 
 
         [CakeMethodAlias]
-        public static void AddSiteBinding(this ICakeContext context, WebsiteSettings settings)
+        public static void AddSiteBinding(this ICakeContext context, BindingSettings settings)
         {
             context.AddSiteBinding("", settings);
         }
 
         [CakeMethodAlias]
-        public static void AddSiteBinding(this ICakeContext context, string server, WebsiteSettings settings)
+        public static void AddSiteBinding(this ICakeContext context, string server, BindingSettings settings)
         {
             using (ServerManager manager = BaseManager.Connect(server))
             {
@@ -109,19 +109,19 @@ namespace Cake.IIS
 
 
         [CakeMethodAlias]
-        public static void RemoveSiteBinding(this ICakeContext context, WebsiteSettings settings)
+        public static void RemoveSiteBinding(this ICakeContext context, BindingSettings settings)
         {
             context.RemoveSiteBinding("", settings);
         }
 
         [CakeMethodAlias]
-        public static void RemoveSiteBinding(this ICakeContext context, string server, WebsiteSettings settings)
+        public static void RemoveSiteBinding(this ICakeContext context, string server, BindingSettings settings)
         {
             using (ServerManager manager = BaseManager.Connect(server))
             {
                 WebsiteManager
                     .Using(context.Environment, context.Log, manager)
-                    .AddBinding(settings);
+                    .RemoveBinding(settings);
             }
         }
 
@@ -161,7 +161,7 @@ namespace Cake.IIS
             {
                 WebsiteManager
                     .Using(context.Environment, context.Log, manager)
-                    .AddApplication(settings);
+                    .RemoveApplication(settings);
             }
         }
     }

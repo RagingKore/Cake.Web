@@ -44,8 +44,8 @@ namespace Cake.IIS
             using (ServerManager manager = BaseManager.Connect(server))
             {
                 ApplicationPoolManager
-                        .Using(context.Environment, context.Log, manager)
-                        .Create(settings);
+                    .Using(context.Environment, context.Log, manager)
+                    .Create(settings);
             }
         }
 
