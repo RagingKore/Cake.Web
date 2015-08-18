@@ -22,6 +22,17 @@ Cake-Build addin that extends Cake with IIS extensions
 * Stop Pool
 * Pool Exists 
 * Recycle Pool
+* Create WebFarm
+* Delete WebFarm
+* Add server to WebFarm
+* Delete server from WebFarm
+* Server exists
+* Set server Healthy
+* Set server Unhealthy
+* Set server Available
+* Set server Unavailable
+* Is server Healthly
+* Get server State
 
 
 
@@ -126,14 +137,14 @@ Task("WebFarm-Server-Available")
     .Description("Sets a WebFarm server as available")
     .Does(() =>
 {
-    SetServerAvailable("Gotham", "Metroplis");
+    SetServerAvailable("remote-server-name", "Batman", "Gotham");
 });
 
 Task("WebFarm-Server-Unavailable")
     .Description("Sets a WebFarm server as unavailable")
     .Does(() =>
 {
-    SetServerUnavailable("Gotham", "Metroplis");
+    SetServerUnavailable("remote-server-name", "Batman", "Gotham");
 });
 
 
