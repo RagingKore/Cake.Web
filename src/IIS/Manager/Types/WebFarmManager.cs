@@ -358,7 +358,7 @@ namespace Cake.IIS
                 ConfigurationElementCollection servers = farm.GetCollection();
                 ConfigurationElement server = servers.FirstOrDefault(f => f.GetAttributeValue("address").ToString() == address);
 
-                if (server != null)
+                if (server == null)
                 {
                     _Log.Information("The server '{0}' does not exists.", address);
                 }

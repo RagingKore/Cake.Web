@@ -1,3 +1,6 @@
+### New in 0.0.9 (Released 2015/09/12)
+* Fix incorrect log in "GetServer"
+
 ### New in 0.0.8 (Released 2015/08/18)
 * Site AuthorizationSettings
 * Add / Remove SiteBindings using wrong settings
