@@ -110,14 +110,14 @@ Task("Website-Stop")
     .Description("Stops a remote Website")
     .Does(() =>
 {
-    StopWebsite("remote-server-name", "MyBlog");
+    StopSite("remote-server-name", "MyBlog");
 });
 
 Task("Website-Start")
     .Description("Starts a local Website")
     .Does(() =>
 {
-    StartWebsite("MyBlog");
+    StartSite("MyBlog");
 });
 
 
