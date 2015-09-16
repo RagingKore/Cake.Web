@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{58FFCB7E
 		..\test\build.cake = ..\test\build.cake
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cake.IIS.Tests", "Tests\Cake.IIS.Tests.csproj", "{C5AA80E6-491F-4FBE-8751-0153368B295B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cake.IIS.Tests", "IIS.Tests\Cake.IIS.Tests.csproj", "{C5AA80E6-491F-4FBE-8751-0153368B295B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
