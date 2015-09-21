@@ -18,13 +18,12 @@
 
       <dependencies>
          <dependency id="Cake.Core" />
-         <dependency id="Microsoft.Web.Administration" />
       </dependencies>
    </metadata>
 
    <files>
       <file src="Cake.IIS.dll" target="lib/net45" />
-      <file src="packages.config" />
+      <file src="Microsoft.Web.Administration.dll" target="lib/net45" />
       <file src="LICENSE" />
    </files>
 </package>

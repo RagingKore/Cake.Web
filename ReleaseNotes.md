@@ -1,3 +1,6 @@
+### New in 0.1.0 (Released 2015/09/21)
+* Changed nuget references from dependencies to files
+
 ### New in 0.0.9 (Released 2015/09/12)
 * Fix incorrect log in "GetServer"
 
