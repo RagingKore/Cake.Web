@@ -24,3 +24,13 @@ Microsoft.Web.Administration.ServerManagerException : Application pools cannot b
 
 ### Solution
 * Check IIS is installed on the machine your trying to manage
+
+
+
+### Error message
+```
+Retrieving the COM class factory for remote component with CLSID {2B72133B-3F5B-4602-8952-803546CE3344} from machine failed due to the following error: 800706ba
+```
+
+### Solution
+* Disable windows firewall
