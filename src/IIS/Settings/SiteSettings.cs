@@ -40,14 +40,6 @@ namespace Cake.IIS
 
             public AuthorizationSettings Authorization { get; set; }
 
-
-
-            public byte[] CertificateHash { get; set; }
-
-            public string CertificateStoreName { get; set; }
-
-
-        
             public bool TraceFailedRequestsEnabled { get; set; }
 
             public string TraceFailedRequestsDirectory { get; set; }

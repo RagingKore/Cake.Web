@@ -356,6 +356,16 @@ namespace Cake.IIS
                     newBinding.Protocol = settings.BindingProtocol.ToString();
                     newBinding.BindingInformation = settings.BindingInformation;
 
+                    if (settings.CertificateHash != null)
+                    {
+                        newBinding.CertificateHash = settings.CertificateHash;
+                    }
+
+                    if (!String.IsNullOrEmpty(settings.CertificateStoreName))
+                    {
+                        newBinding.CertificateStoreName = settings.CertificateStoreName;
+                    }
+
                     site.Bindings.Add(newBinding);
                     _Server.CommitChanges();
 
