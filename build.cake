@@ -258,7 +258,7 @@ Task("Slack")
     }
     else
     {
-        text = "Finished building version " + semVersion + " of " + appName;
+        text = "Published version " + version + " of " + appName;
     }
 
 	// Post Message
