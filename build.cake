@@ -172,7 +172,7 @@ Task("Copy-Files")
 	CreateDirectory("./test/tools/Addins/Cake.IIS/lib/net45/");
 
 	CopyFileToDirectory(buildDir + "/Cake.IIS.dll", "./test/tools/Addins/Cake.IIS/lib/net45/");
-    CopyFileToDirectory(buildDir + "/Microsoft.Web.Administration.dll", "./test/tools/Addins/Cake.IIS/lib/net45/");
+    CopyFileToDirectory("./lib/Microsoft.Web.Administration.dll", "./test/tools/Addins/Cake.IIS/lib/net45/");
 });
 
 Task("Zip-Files")
