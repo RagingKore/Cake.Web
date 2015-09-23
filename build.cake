@@ -250,7 +250,7 @@ Task("Slack")
     .Does(() =>
 {
     //Get Text
-	var text;
+	var text = "";
 
     if (isPullRequest)
     {
