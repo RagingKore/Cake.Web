@@ -1,11 +1,4 @@
 ﻿#region Using Statements
-    using System.Collections.Generic;
-
-    using Microsoft.Web.Administration;
-#endregion
-
-
-#region Using Statements
     using Cake.Core.IO;
 #endregion
 

@@ -7,7 +7,7 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var appName = "Cake IIS";
+var appName = "Cake.IIS";
 
 
 
@@ -222,7 +222,7 @@ Task("Upload-AppVeyor-Artifacts")
 
 Task("Publish-Nuget")
 	.IsDependentOn("Create-NuGet-Packages")
-    .WithCriteria(() => !local)
+    .WithCriteria(() => isRunningOnAppVeyor)
     .WithCriteria(() => !isPullRequest) 
     .Does(() =>
 {
@@ -249,13 +249,21 @@ Task("Publish-Nuget")
 Task("Slack")
     .Does(() =>
 {
-	var token = EnvironmentVariable("SLACK_TOKEN");
-	var channel = "#code";
-	var text = "Finished building version " + semVersion + " of " + appName;
-	
-	// Post the message.
-	var result = Slack.Chat.PostMessage(token, channel, text);
-	
+    //Get Text
+	var text;
+
+    if (isPullRequest)
+    {
+        text = "PR submitted for " + appName;
+    }
+    else
+    {
+        text = "Finished building version " + semVersion + " of " + appName;
+    }
+
+	// Post Message
+	var result = Slack.Chat.PostMessage(EnvironmentVariable("SLACK_TOKEN"), "#code", text);
+
 	if (result.Ok)
 	{
 		//Posted
@@ -278,8 +286,7 @@ Task("Slack")
 
 Task("Package")
 	.IsDependentOn("Zip-Files")
-    .IsDependentOn("Create-NuGet-Packages")
-    .IsDependentOn("Slack");
+    .IsDependentOn("Create-NuGet-Packages");
 
 Task("Default")
     .IsDependentOn("Package");
@@ -287,7 +294,8 @@ Task("Default")
 Task("AppVeyor")
     .IsDependentOn("Update-AppVeyor-Build-Number")
     .IsDependentOn("Upload-AppVeyor-Artifacts")
-    .IsDependentOn("Publish-Nuget");
+    .IsDependentOn("Publish-Nuget")
+    .IsDependentOn("Slack");
 
 
 

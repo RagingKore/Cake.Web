@@ -1,3 +1,6 @@
+### New in 0.1.1 (Released 2015/09/23)
+* Move certificate info to BindingSettings, allowing certificates to be applied at both levels
+
 ### New in 0.1.0 (Released 2015/09/21)
 * Changed nuget references from dependencies to files
 
