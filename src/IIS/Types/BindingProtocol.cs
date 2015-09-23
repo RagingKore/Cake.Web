@@ -3,6 +3,7 @@
     public enum BindingProtocol
     {
         Ftp,
-        Http
+        Http,
+        Https
     }
 }

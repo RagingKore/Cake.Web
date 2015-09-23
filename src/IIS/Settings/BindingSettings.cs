@@ -28,7 +28,9 @@
 
             public string HostName { get; set; }
 
+            public byte[] CertificateHash { get; set; }
 
+            public string CertificateStoreName { get; set; }
 
             public BindingProtocol BindingProtocol { get; set; }
 
