@@ -258,7 +258,7 @@ Task("Slack")
     }
     else
     {
-        text = "Published version " + version + " of " + appName;
+        text = "Published version " + appName + " v" + version;
     }
 
 	// Post Message
