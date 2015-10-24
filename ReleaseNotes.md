@@ -1,3 +1,6 @@
+### New in 0.1.2 (Released 2015/10/24)
+* Remove Cake.Core from nuget
+
 ### New in 0.1.1 (Released 2015/09/23)
 * Move certificate info to BindingSettings, allowing certificates to be applied at both levels
 

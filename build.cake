@@ -156,12 +156,10 @@ Task("Copy-Files")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
-    CopyFileToDirectory("./lib/Microsoft.Web.Administration.dll", binDir);
-
-    CopyFileToDirectory(buildDir + "/Cake.Core.dll", binDir);
-
     CopyFileToDirectory(buildDir + "/Cake.IIS.dll", binDir);
     CopyFileToDirectory(buildDir + "/Cake.IIS.pdb", binDir);
+
+    CopyFileToDirectory("./lib/Microsoft.Web.Administration.dll", binDir);
 
     CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md" }, binDir);
 
@@ -171,6 +169,7 @@ Task("Copy-Files")
 	CreateDirectory("./test/tools/Addins/Cake.IIS/lib/net45/");
 
 	CopyFileToDirectory(buildDir + "/Cake.IIS.dll", "./test/tools/Addins/Cake.IIS/lib/net45/");
+
     CopyFileToDirectory("./lib/Microsoft.Web.Administration.dll", "./test/tools/Addins/Cake.IIS/lib/net45/");
 });
 
