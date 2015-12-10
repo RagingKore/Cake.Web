@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cake.Core, Version=0.5.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cake.Core.0.5.4\lib\net45\Cake.Core.dll</HintPath>
+    <Reference Include="Cake.Core, Version=0.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cake.Core.0.6.4\lib\net45\Cake.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -52,6 +52,8 @@
     <Compile Include="Manager\Base\BaseManager.cs" />
     <Compile Include="Manager\Types\ApplicationPoolManager.cs" />
     <Compile Include="Manager\Types\WebFarmManager.cs" />
+    <Compile Include="Properties\Namespaces.cs" />
+    <Compile Include="Properties\SolutionInfo.cs" />
     <Compile Include="Settings\ApplicationSettings.cs" />
     <Compile Include="Settings\BindingSettings.cs" />
     <Compile Include="Settings\WebFarmSettings.cs" />

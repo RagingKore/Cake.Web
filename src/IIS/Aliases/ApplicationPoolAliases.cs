@@ -109,6 +109,32 @@ namespace Cake.IIS
 
 
         [CakeMethodAlias]
+        public static bool RestartPool(this ICakeContext context, string name)
+        {
+            return context.RestartPool("", name);
+        }
+
+        [CakeMethodAlias]
+        public static bool RestartPool(this ICakeContext context, string server, string name)
+        {
+            using (ServerManager manager = BaseManager.Connect(server))
+            {
+                ApplicationPoolManager poolManager = ApplicationPoolManager.Using(context.Environment, context.Log, manager);
+
+                if (poolManager.Stop(name))
+                {
+                    return poolManager.Start(name);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+
+
+        [CakeMethodAlias]
         public static bool RecyclePool(this ICakeContext context, string name)
         {
             return context.RecyclePool("", name);

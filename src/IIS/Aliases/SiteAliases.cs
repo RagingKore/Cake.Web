@@ -90,6 +90,32 @@ namespace Cake.IIS
 
 
         [CakeMethodAlias]
+        public static bool RestartSite(this ICakeContext context, string name)
+        {
+            return context.RestartSite("", name);
+        }
+
+        [CakeMethodAlias]
+        public static bool RestartSite(this ICakeContext context, string server, string name)
+        {
+            using (ServerManager manager = BaseManager.Connect(server))
+            {
+                WebsiteManager webManager = WebsiteManager.Using(context.Environment, context.Log, manager);
+
+                if (webManager.Stop(name))
+                {
+                    return webManager.Start(name);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+
+
+        [CakeMethodAlias]
         public static void AddSiteBinding(this ICakeContext context, BindingSettings settings)
         {
             context.AddSiteBinding("", settings);

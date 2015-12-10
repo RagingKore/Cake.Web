@@ -10,13 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{44AEA5A8
 		..\.gitignore = ..\.gitignore
 		..\appveyor.yml = ..\appveyor.yml
 		..\build.cake = ..\build.cake
-		..\ReleaseNotes.md = ..\ReleaseNotes.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{2C6F771C-2518-460F-A49D-BB40891AFB29}"
 	ProjectSection(SolutionItems) = preProject
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
+		..\ReleaseNotes.md = ..\ReleaseNotes.md
 		..\TroubleShooting.md = ..\TroubleShooting.md
 	EndProjectSection
 EndProject
