@@ -1,3 +1,8 @@
+### New in 0.1.3 (Released 2015/12/10)
+* Add Cake namespace docs
+* Update Cake.Core reference
+* Restart Site / ApplicationPool
+
 ### New in 0.1.2 (Released 2015/10/24)
 * Remove Cake.Core from nuget
 
