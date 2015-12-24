@@ -158,6 +158,7 @@ Task("Copy-Files")
 {
     CopyFileToDirectory(buildDir + "/Cake.IIS.dll", binDir);
     CopyFileToDirectory(buildDir + "/Cake.IIS.pdb", binDir);
+    CopyFileToDirectory(buildDir + "/Cake.IIS.xml", binDir);
 
     CopyFileToDirectory("./lib/Microsoft.Web.Administration.dll", binDir);
 
