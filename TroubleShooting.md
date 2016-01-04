@@ -19,6 +19,17 @@ Error: Cannot read configuration file due to insufficient permissions
 
 ### Error message
 ```
+Error: The configuration section 'webFarms' cannot be read because it is missing a section declaration
+```
+
+### Solution
+* Install WebFarm Framework
+http://www.microsoft.com/en-us/download/details.aspx?id=27723
+
+
+
+### Error message
+```
 Microsoft.Web.Administration.ServerManagerException : Application pools cannot be started unless the Windows Activation Service (WAS) is running.
 ```
 
