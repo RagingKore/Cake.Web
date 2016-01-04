@@ -143,7 +143,7 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    XUnit2("./src/**/bin/" + configuration + "/*.Tests.dll", new XUnit2Settings 
+	XUnit2("./src/**/bin/" + configuration + "/*.Tests.dll", new XUnit2Settings 
 	{
         OutputDirectory = testResultsDir,
         XmlReportV1 = true
