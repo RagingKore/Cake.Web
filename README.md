@@ -38,6 +38,8 @@ Cake-Build addin that extends Cake with IIS extensions
 
 ## Referencing
 
+[![NuGet Version](http://img.shields.io/nuget/v/Cake.IIS.svg?style=flat)](https://www.nuget.org/packages/Cake.IIS/) [![NuGet Downloads](http://img.shields.io/nuget/dt/Cake.IIS.svg?style=flat)](https://www.nuget.org/packages/Cake.IIS/)
+
 Cake.IIS is available as a nuget package from the package manager console:
 
 ```csharp
