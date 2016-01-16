@@ -1,11 +1,24 @@
 # Cake.IIS
 Cake-Build addin that extends Cake with IIS extensions
 
-[![Build status](https://ci.appveyor.com/api/projects/status/eqvnf0dk25rqsh44?svg=true)](https://ci.appveyor.com/project/PhillipSharpe/cake-iis)
+[![Build status](https://ci.appveyor.com/api/projects/status/eqvnf0dk25rqsh44?svg=true)](https://ci.appveyor.com/project/SharpeRAD/cake-iis)
 
 [![cakebuild.net](https://img.shields.io/badge/WWW-cakebuild.net-blue.svg)](http://cakebuild.net/)
 
-[![Join the chat at https://gitter.im/cake-build/cake](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cake-build/cake?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/cake-build/cake](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cake-build/cake)
+
+
+
+## Table of contents
+
+1. [Implemented functionality](https://github.com/SharpeRAD/Cake.IIS#implemented-functionality)
+2. [Referencing](https://github.com/SharpeRAD/Cake.IIS#referencing)
+3. [Usage](https://github.com/SharpeRAD/Cake.IIS#usage)
+4. [Example](https://github.com/SharpeRAD/Cake.IIS#example)
+5. [TroubleShooting](https://github.com/SharpeRAD/Cake.IIS#troubleshooting)
+6. [Plays well with](https://github.com/SharpeRAD/Cake.IIS#plays-well-with)
+7. [License](https://github.com/SharpeRAD/Cake.IIS#license)
+8. [Share the love](https://github.com/SharpeRAD/Cake.IIS#share-the-love)
 
 
 
@@ -16,11 +29,11 @@ Cake-Build addin that extends Cake with IIS extensions
 * Start Site
 * Stop Site
 * Site Exists
-* Create Applicaiton Pool
+* Create Application Pool
 * Delete Pool
 * Start Pool
 * Stop Pool
-* Pool Exists 
+* Pool Exists
 * Recycle Pool
 * Create WebFarm
 * Delete WebFarm
@@ -31,7 +44,7 @@ Cake-Build addin that extends Cake with IIS extensions
 * Set server Unhealthy
 * Set server Available
 * Set server Unavailable
-* Is server Healthly
+* Is server Healthy
 * Get server State
 
 
@@ -58,7 +71,6 @@ or directly in your build script via a cake addin:
 
 ```csharp
 #addin "Cake.IIS"
-
 
 Task("ApplicationPool-Create")
     .Description("Create a ApplicationPool")
@@ -147,7 +159,6 @@ Task("WebFarm-Server-Unavailable")
     SetServerUnavailable("remote-server-name", "Batman", "Gotham");
 });
 
-
 RunTarget("Website-Create");
 ```
 
@@ -155,10 +166,32 @@ RunTarget("Website-Create");
 
 ## Example
 
-A complete Cake example can be found [here](https://github.com/SharpeRAD/Cake.IIS/blob/master/test/build.cake)
+A complete Cake example can be found [here](https://github.com/SharpeRAD/Cake.IIS/blob/master/test/build.cake).
 
 
 
 ## TroubleShooting
 
-A few pointers for managing IIS can be found [here](https://github.com/SharpeRAD/Cake.IIS/blob/master/TroubleShooting.md)
+A few pointers for managing IIS can be found [here](https://github.com/SharpeRAD/Cake.IIS/blob/master/TroubleShooting.md).
+
+
+
+## Plays well with
+
+If your looking to deploy to IIS its worth checking out [Cake.WebDeploy](https://github.com/SharpeRAD/Cake.WebDeploy) or if your running a WebFarm inside AWS then check out [Cake.AWS.ElasticLoadBalancing](https://github.com/SharpeRAD/Cake.AWS.ElasticLoadBalancing).
+
+If your looking for a way to trigger cake tasks based on windows events or at scheduled intervals then check out [Cake.CakeBoss](https://github.com/SharpeRAD/CakeBoss).
+
+
+
+## License
+
+Copyright � 2015 - 2016 Sergio Silveira, Phillip Sharpe
+
+Cake.IIS is provided as-is under the MIT license. For more information see [LICENSE](https://github.com/SharpeRAD/Cake.IIS/blob/master/LICENSE).
+
+
+
+## Share the love
+
+If this project helps you in anyway then please :star: the repository.

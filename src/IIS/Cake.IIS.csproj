@@ -54,8 +54,6 @@
     <Compile Include="Manager\Base\BaseManager.cs" />
     <Compile Include="Manager\Types\ApplicationPoolManager.cs" />
     <Compile Include="Manager\Types\WebFarmManager.cs" />
-    <Compile Include="Properties\Namespaces.cs" />
-    <Compile Include="Properties\SolutionInfo.cs" />
     <Compile Include="Settings\ApplicationSettings.cs" />
     <Compile Include="Settings\BindingSettings.cs" />
     <Compile Include="Settings\WebFarmSettings.cs" />
@@ -69,11 +67,15 @@
     <Compile Include="Settings\FtpsiteSettings.cs" />
     <Compile Include="Manager\Base\BaseSiteManager.cs" />
     <Compile Include="Aliases\WebsiteAliases.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\SiteSettings.cs" />
     <Compile Include="Manager\Types\WebsiteManager.cs" />
     <Compile Include="Settings\WebsiteSettings.cs" />
     <Compile Include="Aliases\SiteAliases.cs" />
+	<Compile Include="Properties\Namespaces.cs" />
+	<Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

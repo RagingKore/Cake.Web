@@ -1,3 +1,6 @@
+### New in 0.1.5 (Released 2016/01/16)
+* Fixed SolutionInfo link
+
 ### New in 0.1.4 (Released 2015/12/24)
 * addin xml doc to assembly
 
@@ -37,13 +40,13 @@
 * Add Thread.Sleep exception to start / Stop methods to take into account for IIS delays
 
 ### New in 0.0.5 (Released 2015/08/13)
-* New UnitTests and Bugfixes by Jake Scott
+* New UnitTests and Bug fixes by Jake Scott
 * AppPool TimeSpan checks
 * Added cake build example
 * Added troubleshooting info
 
 ### New in 0.0.4 (Released 2015/08/10)
-* Seperate out BindingSettings
+* Separate out BindingSettings
 * Add / Remove site binding
 * Add / Remove site application
 * Change Debug to Information logs
