@@ -9,9 +9,17 @@
 
 namespace Cake.IIS
 {
+    /// <summary>
+    /// Class for managing FTP sites
+    /// </summary>
     public class FtpsiteManager : BaseSiteManager
     {
         #region Constructor (1)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="FtpsiteManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
             public FtpsiteManager(ICakeEnvironment environment, ICakeLog log)
                 : base(environment, log)
             {

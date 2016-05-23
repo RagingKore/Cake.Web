@@ -14,9 +14,17 @@
 
 namespace Cake.IIS
 {
+     /// <summary>
+    /// Base class for managing IIS sites
+    /// </summary>
     public abstract class BaseSiteManager : BaseManager
     {
         #region Constructor (1)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="BaseSiteManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
             public BaseSiteManager(ICakeEnvironment environment, ICakeLog log)
                 : base(environment, log)
             {
@@ -29,6 +37,12 @@ namespace Cake.IIS
 
 
         #region Functions (9)
+            /// <summary>
+            /// Creates a IIS site
+            /// </summary>
+            /// <param name="settings">The setting of the site</param>
+            /// <param name="exists">Check if the site exists</param>
+            /// <returns>IIS Site.</returns>
             protected Site CreateSite(SiteSettings settings, out bool exists)
             {
                 if (settings == null)
@@ -116,6 +130,10 @@ namespace Cake.IIS
                 return site;
             }
 
+            /// <summary>
+            /// Sets the authentication settings for the site
+            /// </summary>
+            /// <param name="settings">The site settings</param>
             protected void SetAuthentication(SiteSettings settings)
             {
                 if (settings.Authentication != null)
@@ -169,6 +187,10 @@ namespace Cake.IIS
                 }
             }
 
+            /// <summary>
+            /// Sets the authorization settings for the site
+            /// </summary>
+            /// <param name="settings">The site settings</param>
             protected void SetAuthorization(SiteSettings settings)
             {
                 if (settings.Authorization != null)
@@ -235,6 +257,11 @@ namespace Cake.IIS
 
 
 
+            /// <summary>
+            /// Delets a site from IIS
+            /// </summary>
+            /// <param name="name">The name of the site to delete</param>
+            /// <returns>If the site was deleted.</returns>
             public bool Delete(string name)
             {
                 var site = _Server.Sites.FirstOrDefault(p => p.Name == name);
@@ -254,6 +281,11 @@ namespace Cake.IIS
                 }
             }
 
+            /// <summary>
+            /// Checks if a site exists in IIS
+            /// </summary>
+            /// <param name="name">The name of the site to check</param>
+            /// <returns>If the site exists.</returns>
             public bool Exists(string name)
             {
                 if (_Server.Sites.SingleOrDefault(p => p.Name == name) != null)
@@ -270,6 +302,11 @@ namespace Cake.IIS
 
 
 
+            /// <summary>
+            /// Starts a IIS site
+            /// </summary>
+            /// <param name="name">The name of the site to start</param>
+            /// <returns>If the site was started.</returns>
             public bool Start(string name)
             {
                 var site = _Server.Sites.FirstOrDefault(p => p.Name == name);
@@ -296,6 +333,11 @@ namespace Cake.IIS
                 }
             }
 
+            /// <summary>
+            /// Stops a IIS site
+            /// </summary>
+            /// <param name="name">The name of the site to stop</param>
+            /// <returns>If the site was stopped.</returns>
             public bool Stop(string name)
             {
                 var site = _Server.Sites.FirstOrDefault(p => p.Name == name);

@@ -9,9 +9,17 @@
 
 namespace Cake.IIS
 {
+    /// <summary>
+    /// Class for managing websites
+    /// </summary>
     public class WebsiteManager : BaseSiteManager
     {
         #region Constructor (1)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="WebsiteManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
             public WebsiteManager(ICakeEnvironment environment, ICakeLog log)
                 : base(environment, log)
             {

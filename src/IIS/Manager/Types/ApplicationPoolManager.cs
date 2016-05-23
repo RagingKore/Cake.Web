@@ -13,6 +13,9 @@
 
 namespace Cake.IIS
 {
+    /// <summary>
+    /// Class for managing application pools
+    /// </summary>
     public class ApplicationPoolManager : BaseManager
     {
         #region Fields (1)
@@ -30,6 +33,11 @@ namespace Cake.IIS
 
 
         #region Constructor (1)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ApplicationPoolManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
             public ApplicationPoolManager(ICakeEnvironment environment, ICakeLog log)
                     : base(environment, log)
             {

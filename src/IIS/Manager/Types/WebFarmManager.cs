@@ -13,9 +13,17 @@
 
 namespace Cake.IIS
 {
+    /// <summary>
+    /// Class for managing IIS WebFarms
+    /// </summary>
     public class WebFarmManager : BaseManager
     {
         #region Constructor (1)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="WebFarmManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
             public WebFarmManager(ICakeEnvironment environment, ICakeLog log)
                 : base(environment, log)
             {

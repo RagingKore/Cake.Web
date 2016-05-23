@@ -12,6 +12,9 @@
 
 namespace Cake.IIS
 {
+    /// <summary>
+    /// Base class for managing IIS
+    /// </summary>
     public abstract class BaseManager
     {
         #region Fields (3)
@@ -26,6 +29,11 @@ namespace Cake.IIS
 
 
         #region Constructor (1)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="BaseManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
             public BaseManager(ICakeEnvironment environment, ICakeLog log)
             {
                 if (environment == null)
@@ -47,6 +55,11 @@ namespace Cake.IIS
 
 
         #region Constructor (5)
+            /// <summary>
+            /// Creates a IIS ServerManager
+            /// </summary>
+            /// <param name="server">The name of the server to connect to.</param>
+            /// <returns>IIS ServerManager.</returns>
             public static ServerManager Connect(string server)
             {
                 if (String.IsNullOrEmpty(server))
@@ -61,16 +74,27 @@ namespace Cake.IIS
 
 
 
+            /// <summary>
+            /// Set the IIS ServerManager
+            /// </summary>
             public void SetServer()
             {
                 this.SetServer(BaseManager.Connect(""));
             }
 
+            /// <summary>
+            /// Set the IIS ServerManager
+            /// </summary>
+            /// <param name="server">The name of the server to connect to.</param>
             public void SetServer(string server)
             {
                 this.SetServer(BaseManager.Connect(server));
             }
 
+            /// <summary>
+            /// Set the IIS ServerManager
+            /// </summary>
+            /// <param name="manager">The manager to connect to.</param>
             public void SetServer(ServerManager manager)
             {
                 if (manager == null)
@@ -83,6 +107,11 @@ namespace Cake.IIS
 
 
 
+            /// <summary>
+            /// Gets the physical directory from the working directory
+            /// </summary>
+            /// <param name="settings">The directory settings.</param>
+            /// <returns>The directory path.</returns>
             protected string GetPhysicalDirectory(IDirectorySettings settings)
             {
                 if (String.IsNullOrEmpty(settings.ComputerName))
