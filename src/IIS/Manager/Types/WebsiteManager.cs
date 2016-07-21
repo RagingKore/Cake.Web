@@ -32,6 +32,13 @@ namespace Cake.IIS
 
 
         #region Functions (2)
+            /// <summary>
+            /// Creates a new instance of the <see cref="WebsiteManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
+            /// <param name="server">The <see cref="ServerManager" /> to connect to.</param>
+            /// <returns>a new instance of the <see cref="WebFarmManager" />.</returns>
             public static WebsiteManager Using(ICakeEnvironment environment, ICakeLog log, ServerManager server)
             {
                 WebsiteManager manager = new WebsiteManager(environment, log);
@@ -43,6 +50,10 @@ namespace Cake.IIS
 
 
 
+            /// <summary>
+            /// Creates a website
+            /// </summary>
+            /// <param name="settings">The settings of the website to add</param>
             public void Create(WebsiteSettings settings)
             {
                 bool exists;

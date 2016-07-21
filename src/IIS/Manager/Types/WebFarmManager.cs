@@ -36,6 +36,13 @@ namespace Cake.IIS
 
 
         #region Functions (14)
+            /// <summary>
+            /// Creates a new instance of the <see cref="WebFarmManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
+            /// <param name="server">The <see cref="ServerManager" /> to connect to.</param>
+            /// <returns>a new instance of the <see cref="WebFarmManager" />.</returns>
             public static WebFarmManager Using(ICakeEnvironment environment, ICakeLog log, ServerManager server)
             {
                 WebFarmManager manager = new WebFarmManager(environment, log);
@@ -47,7 +54,11 @@ namespace Cake.IIS
 
 
 
-            //Farms
+            /// <summary>
+            /// Creates a WebFarm
+            /// </summary>
+            /// <param name="settings">The settings of the WebFarm</param>
+            /// <returns>If the WebFarm was added.</returns>
             public void Create(WebFarmSettings settings)
             {
                 if (settings == null)
@@ -109,6 +120,11 @@ namespace Cake.IIS
                 _Log.Information("WebFarm created.");
             }
 
+            /// <summary>
+            /// Delete an WebFarm
+            /// </summary>
+            /// <param name="name">The name of the WebFarm</param>
+            /// <returns>If the WebFarm was deleted.</returns>
             public bool Delete(string name)
             {
                 ConfigurationElementCollection farms = this.GetFarms();
@@ -128,7 +144,12 @@ namespace Cake.IIS
                     return false;
                 }
             }
-        
+
+            /// <summary>
+            /// Checks if a WebFarm exists
+            /// </summary>
+            /// <param name="name">The name of the WebFarm</param>
+            /// <returns>If the WebFarm exists.</returns>
             public bool Exists(string name)
             {
                 ConfigurationElementCollection farms = this.GetFarms();
@@ -148,7 +169,12 @@ namespace Cake.IIS
 
 
 
-            //Servers
+            /// <summary>
+            /// Adds a server to the WebFarm
+            /// </summary>
+            /// <param name="farm">The name of the WebFarm</param>
+            /// <param name="address">The address of the server</param>
+            /// <returns>If the server was added.</returns>
             public bool AddServer(string farm, string address)
             {
                 ConfigurationElement farmElement = this.GetFarm(farm);
@@ -179,6 +205,12 @@ namespace Cake.IIS
                 return false;
             }
 
+            /// <summary>
+            /// Removes a server to the WebFarm
+            /// </summary>
+            /// <param name="farm">The name of the WebFarm</param>
+            /// <param name="address">The address of the server</param>
+            /// <returns>If the server was removed.</returns>
             public bool RemoveServer(string farm, string address)
             {
                 ConfigurationElement farmElement = this.GetFarm(farm);
@@ -205,7 +237,13 @@ namespace Cake.IIS
 
                 return false;
             }
-        
+
+            /// <summary>
+            /// Checks if a server belongs to the WebFarm
+            /// </summary>
+            /// <param name="farm">The name of the WebFarm</param>
+            /// <param name="address">The address of the server</param>
+            /// <returns>If the server belongs to the WebFarm.</returns>
             public bool ServerExists(string farm, string address)
             {
                 ConfigurationElement farmElement = this.GetFarm(farm);
@@ -234,7 +272,11 @@ namespace Cake.IIS
 
 
 
-            //Health
+            /// <summary>
+            /// Marks a server as healthy
+            /// </summary>
+            /// <param name="farm">The name of the WebFarm</param>
+            /// <param name="address">The address of the server</param>
             public void SetServerHealthy(string farm, string address)
             {
                 ConfigurationElement arrElement = this.GetServerArr(farm, address);
@@ -250,6 +292,11 @@ namespace Cake.IIS
                 }
             }
 
+            /// <summary>
+            /// Marks a server as unhealthy
+            /// </summary>
+            /// <param name="farm">The name of the WebFarm</param>
+            /// <param name="address">The address of the server</param>
             public void SetServerUnhealthy(string farm, string address)
             {
                 ConfigurationElement arrElement = this.GetServerArr(farm, address);
@@ -267,7 +314,11 @@ namespace Cake.IIS
 
 
 
-            //Available
+            /// <summary>
+            /// Marks a server as available
+            /// </summary>
+            /// <param name="farm">The name of the WebFarm</param>
+            /// <param name="address">The address of the server</param>
             public void SetServerAvailable(string farm, string address)
             {
                 ConfigurationElement arrElement = this.GetServerArr(farm, address);
@@ -284,6 +335,11 @@ namespace Cake.IIS
                 }
             }
 
+            /// <summary>
+            /// Marks a server as unavailable
+            /// </summary>
+            /// <param name="farm">The name of the WebFarm</param>
+            /// <param name="address">The address of the server</param>
             public void SetServerUnavailable(string farm, string address)
             {
                 ConfigurationElement arrElement = this.GetServerArr(farm, address);
@@ -302,7 +358,12 @@ namespace Cake.IIS
 
 
 
-            //State
+            /// <summary>
+            /// Checks if a server is healthy
+            /// </summary>
+            /// <param name="farm">The name of the WebFarm</param>
+            /// <param name="address">The address of the server</param>
+            /// <returns>If the server is healthy.</returns>
             public bool GetServerIsHealthy(string farm, string address)
             {
                 ConfigurationElement arrElement = this.GetServerArr(farm, address);
@@ -321,6 +382,12 @@ namespace Cake.IIS
                 }
             }
 
+            /// <summary>
+            /// Gets the state of a server in a WebFarm
+            /// </summary>
+            /// <param name="farm">The name of the WebFarm</param>
+            /// <param name="address">The address of the server</param>
+            /// <returns>Gets the state of the server.</returns>
             public string GetServerState(string farm, string address)
             {
                 ConfigurationElement arrElement = this.GetServerArr(farm, address);

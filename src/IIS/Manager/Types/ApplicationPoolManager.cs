@@ -50,6 +50,13 @@ namespace Cake.IIS
 
 
         #region Functions (8)
+            /// <summary>
+            /// Creates a new instance of the <see cref="ApplicationPoolManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
+            /// <param name="server">The <see cref="ServerManager" /> to connect to.</param>
+            /// <returns>a new instance of the <see cref="ApplicationPoolManager" />.</returns>
             public static ApplicationPoolManager Using(ICakeEnvironment environment, ICakeLog log, ServerManager server)
             {
                 ApplicationPoolManager manager = new ApplicationPoolManager(environment, log);
@@ -61,6 +68,11 @@ namespace Cake.IIS
 
 
 
+            /// <summary>
+            /// Creates an application pool
+            /// </summary>
+            /// <param name="settings">The settings of the application to add</param>
+            /// <returns>If the application pool was added.</returns>
             public void Create(ApplicationPoolSettings settings)
             {
                 if (settings == null)
@@ -170,7 +182,12 @@ namespace Cake.IIS
 
                 _Log.Information("Application pool created.");
             }
-
+        
+            /// <summary>
+            /// Delete an application pool
+            /// </summary>
+            /// <param name="name">The name of the application pool</param>
+            /// <returns>If the application pool was deleted.</returns>
             public bool Delete(string name)
             {
                 if (!this.IsSystemDefault(name))
@@ -196,7 +213,12 @@ namespace Cake.IIS
                     return false;
                 }
             }
-
+                
+            /// <summary>
+            /// Recycle an application pool
+            /// </summary>
+            /// <param name="name">The name of the application pool</param>
+            /// <returns>If the application pool was recycled.</returns>
             public bool Recycle(string name)
             {
                 var pool = _Server.ApplicationPools.FirstOrDefault(p => p.Name == name);
@@ -222,7 +244,12 @@ namespace Cake.IIS
                     return true;
                 }
             }
-
+                        
+            /// <summary>
+            /// Start an application pool
+            /// </summary>
+            /// <param name="name">The name of the application pool</param>
+            /// <returns>If the application pool was started.</returns>
             public bool Start(string name)
             {
                 var pool = _Server.ApplicationPools.FirstOrDefault(p => p.Name == name);
@@ -248,7 +275,12 @@ namespace Cake.IIS
                     return true;
                 }
             }
-
+                        
+            /// <summary>
+            /// Stops an application pool
+            /// </summary>
+            /// <param name="name">The name of the application pool</param>
+            /// <returns>If the application pool was stopped.</returns>
             public bool Stop(string name)
             {
                 var pool = _Server.ApplicationPools.FirstOrDefault(p => p.Name == name);
@@ -274,7 +306,12 @@ namespace Cake.IIS
                     return true;
                 }
             }
-
+                        
+            /// <summary>
+            /// Checks if an application pool exists
+            /// </summary>
+            /// <param name="name">The name of the application pool</param>
+            /// <returns>If the application pool exists.</returns>
             public bool Exists(string name)
             {
                 if (_Server.ApplicationPools.SingleOrDefault(p => p.Name == name) != null)
@@ -288,7 +325,12 @@ namespace Cake.IIS
                     return false;
                 }
             }
-
+                                
+            /// <summary>
+            /// Checks if an application pool has a default name
+            /// </summary>
+            /// <param name="name">The name of the application pool</param>
+            /// <returns>If the application pool has a default name.</returns>
             public bool IsSystemDefault(string name)
             {
                 if (ApplicationPoolBlackList.Contains(name))

@@ -40,13 +40,22 @@ namespace Cake.IIS.Tests.Utils
         {
             try
             {
-                if (Lines == null)
+                if (DebugLog.Lines == null)
                 {
-                    Lines = new List<string>();
+                    DebugLog.Lines = new List<string>();
                 }
 
-                Lines.Add(format);
-                Debug.WriteLine(format);
+                format = String.Format(format, args);
+                DebugLog.Lines.Add(format);
+
+                if (Debugger.IsAttached)
+                {
+                    Debug.WriteLine(format);
+                }
+                else
+                {
+                    Console.WriteLine(format);
+                }
             }
             catch { }
         }

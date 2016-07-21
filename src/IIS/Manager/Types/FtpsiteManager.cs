@@ -32,6 +32,13 @@ namespace Cake.IIS
 
 
         #region Fucntions (2)
+            /// <summary>
+            /// Creates a new instance of the <see cref="FtpsiteManager" /> class.
+            /// </summary>
+            /// <param name="environment">The environment.</param>
+            /// <param name="log">The log.</param>
+            /// <param name="server">The <see cref="ServerManager" /> to connect to.</param>
+            /// <returns>a new instance of the <see cref="FtpsiteManager" />.</returns>
             public static FtpsiteManager Using(ICakeEnvironment environment, ICakeLog log, ServerManager server)
             {
                 FtpsiteManager manager = new FtpsiteManager(environment, log);
@@ -43,6 +50,11 @@ namespace Cake.IIS
 
 
 
+            /// <summary>
+            /// Creates an FTP site
+            /// </summary>
+            /// <param name="settings">The settings of the FTP site to add</param>
+            /// <returns>If the FTP site was added.</returns>
             public void Create(FtpsiteSettings settings)
             {
                 //Create Site

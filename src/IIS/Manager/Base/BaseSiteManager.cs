@@ -366,6 +366,11 @@ namespace Cake.IIS
 
 
 
+            /// <summary>
+            /// Adds a binding to a IIS site
+            /// </summary>
+            /// <param name="settings">The settings of the binding/param>
+            /// <returns>If the binding was added.</returns>
             public bool AddBinding(BindingSettings settings)
             {
                 if (settings == null)
@@ -420,6 +425,11 @@ namespace Cake.IIS
                 }
             }
 
+            /// <summary>
+            /// Removes a binding to a IIS site
+            /// </summary>
+            /// <param name="settings">The settings of the binding</param>
+            /// <returns>If the binding was removed.</returns>
             public bool RemoveBinding(BindingSettings settings)
             {
                 if (settings == null)
@@ -464,6 +474,11 @@ namespace Cake.IIS
 
 
 
+            /// <summary>
+            /// Adds a virtual application to a IIS site
+            /// </summary>
+            /// <param name="settings">The settings of the application to add</param>
+            /// <returns>If the application was added.</returns>
             public bool AddApplication(ApplicationSettings settings)
             {
                 if (settings == null)
@@ -545,6 +560,11 @@ namespace Cake.IIS
                 }
             }
 
+            /// <summary>
+            /// Removes a virtual application to a IIS site
+            /// </summary>
+            /// <param name="settings">The settings of the application to remove</param>
+            /// <returns>If the application was removed.</returns>
             public bool RemoveApplication(ApplicationSettings settings)
             {
                 if (settings == null)
