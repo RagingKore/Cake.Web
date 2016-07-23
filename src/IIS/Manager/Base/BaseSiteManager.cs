@@ -369,7 +369,7 @@ namespace Cake.IIS
             /// <summary>
             /// Adds a binding to a IIS site
             /// </summary>
-            /// <param name="settings">The settings of the binding/param>
+            /// <param name="settings">The settings of the binding</param>
             /// <returns>If the binding was added.</returns>
             public bool AddBinding(BindingSettings settings)
             {
