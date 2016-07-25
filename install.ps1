@@ -2,10 +2,10 @@
 iex ((new-object net.webclient).DownloadString("https://chocolatey.org/install.ps1"))
 
 ## Install WebPI
-cInst webpicommandline -h
+cInst webpicommandline -y
 
 #Install Url Rewrite and ARR
-$webPiProducts = @('UrlRewrite2', 'ARRv3_0') 
+$webPiProducts = @('UrlRewrite2', 'ARRv3_0')
 WebPICMD /Install /Products:"$($webPiProducts -join ',')" /AcceptEULA
 
 #Start Services
