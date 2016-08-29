@@ -35,6 +35,7 @@ Cake-Build addin that extends Cake with IIS extensions
 * Stop Pool
 * Pool Exists
 * Recycle Pool
+* Create site applications
 * Create WebFarm
 * Delete WebFarm
 * Add server to WebFarm
