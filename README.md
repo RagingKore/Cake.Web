@@ -134,6 +134,21 @@ Task("Website-Start")
 
 
 
+Task("Application-Create")
+    .Description("Starts a local Website")
+    .Does(() =>
+{
+    AddSiteApplication(new ApplicationSettings()
+    {
+        SiteName = "Default Website",
+
+        ApplicationPath = "/NestedApp",
+        PhysicalDirectory = "C:/Apps/KillerApp/"
+    });
+});
+
+
+
 Task("WebFarm-Create")
     .Description("Create a WebFarm")
     .Does(() =>
