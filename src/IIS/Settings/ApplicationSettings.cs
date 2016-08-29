@@ -9,14 +9,6 @@ namespace Cake.IIS
 {
     public class ApplicationSettings : IDirectorySettings
     {
-        #region Fields (1)
-            private AuthenticationSettings _Authentication;
-        #endregion
-
-
-
-
-
         #region Constructor (1)
             public ApplicationSettings()
             {

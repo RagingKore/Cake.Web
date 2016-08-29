@@ -136,7 +136,7 @@ Task("Build")
 
         MSBuild(solution, settings =>
             settings.SetPlatformTarget(PlatformTarget.MSIL)
-                    .WithProperty("TreatWarningsAsErrors","true")
+                    .WithProperty("TreatWarningsAsErrors", "false")
                     .WithTarget("Build")
                     .SetConfiguration(configuration));
     }
