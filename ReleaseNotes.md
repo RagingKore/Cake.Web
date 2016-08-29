@@ -1,3 +1,6 @@
+### New in 0.1.6 (Released 2016/08/29)
+* Standardised application authorization / authentication
+
 ### New in 0.1.5 (Released 2016/01/16)
 * Fixed SolutionInfo link
 

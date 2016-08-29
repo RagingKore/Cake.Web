@@ -124,8 +124,19 @@ namespace Cake.IIS
 
 
                 //Security
-                this.SetAuthentication(settings);
-                this.SetAuthorization(settings);
+                string server = "";
+
+                if (settings is WebsiteSettings)
+                {
+                    server = "webServer";
+                }
+                else
+                {
+                    server = "ftpServer";
+                }
+
+                this.SetAuthentication(server, settings.Name, "", settings.Authentication);
+                this.SetAuthorization(server, settings.Name, "", settings.Authorization);
 
                 return site;
             }
@@ -133,102 +144,87 @@ namespace Cake.IIS
             /// <summary>
             /// Sets the authentication settings for the site
             /// </summary>
-            /// <param name="settings">The site settings</param>
-            protected void SetAuthentication(SiteSettings settings)
+            /// /// <param name="server">The atype of server</param>
+            /// <param name="site">The name of the site</param>
+            /// <param name="appPath">The application path</param>
+            /// <param name="settings">The authentication settings</param>
+            protected void SetAuthentication(string server, string site, string appPath, AuthenticationSettings settings)
             {
-                if (settings.Authentication != null)
+                if (settings != null)
                 {
-                    //Get Type
-                    string server = "";
-
-                    if (settings is WebsiteSettings)
-                    {
-                        server = "webServer";
-                    }
-                    else
-                    {
-                        server = "ftpServer";
-                    }
-
-
-
                     //Authentication
                     var config = _Server.GetApplicationHostConfiguration();
-                    var authentication = config.GetSection("system." + server + "/security/authorization", settings.Name);
+
+                    var locationPath = site + appPath;
+                    var authentication = config.GetSection("system." + server + "/security/authorization", locationPath);
 
 
 
                     // Anonymous Authentication
                     var anonymousAuthentication = authentication.GetChildElement("anonymousAuthentication");
 
-                    anonymousAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableAnonymousAuthentication);
+                    anonymousAuthentication.SetAttributeValue("enabled", settings.EnableAnonymousAuthentication);
 
-                    _Log.Information("Anonymous Authentication enabled: {0}", settings.Authentication.EnableAnonymousAuthentication);
+                    _Log.Information("Anonymous Authentication enabled: {0}", settings.EnableAnonymousAuthentication);
 
 
 
                     // Basic Authentication
                     var basicAuthentication = authentication.GetChildElement("basicAuthentication");
 
-                    basicAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableBasicAuthentication);
-                    basicAuthentication.SetAttributeValue("userName", settings.Authentication.Username);
-                    basicAuthentication.SetAttributeValue("password", settings.Authentication.Password);
+                    basicAuthentication.SetAttributeValue("enabled", settings.EnableBasicAuthentication);
+                    basicAuthentication.SetAttributeValue("userName", settings.Username);
+                    basicAuthentication.SetAttributeValue("password", settings.Password);
 
-                    _Log.Information("Basic Authentication enabled: {0}", settings.Authentication.EnableBasicAuthentication);
+                    _Log.Information("Basic Authentication enabled: {0}", settings.EnableBasicAuthentication);
 
 
 
                     // Windows Authentication
                     var windowsAuthentication = authentication.GetChildElement("windowsAuthentication");
 
-                    windowsAuthentication.SetAttributeValue("enabled", settings.Authentication.EnableWindowsAuthentication);
+                    windowsAuthentication.SetAttributeValue("enabled", settings.EnableWindowsAuthentication);
 
-                    _Log.Information("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
+                    _Log.Information("Windows Authentication enabled: {0}", settings.EnableWindowsAuthentication);
                 }
             }
 
             /// <summary>
             /// Sets the authorization settings for the site
             /// </summary>
-            /// <param name="settings">The site settings</param>
-            protected void SetAuthorization(SiteSettings settings)
+            /// <param name="server">The atype of server</param>
+            /// <param name="site">The name of the site</param>
+            /// <param name="appPath">The application path</param>
+            /// <param name="settings">The authorization settings</param>
+            protected void SetAuthorization(string server, string site, string appPath, AuthorizationSettings settings)
             {
-                if (settings.Authorization != null)
+                if (settings != null)
                 {
-                    //Get Type
-                    string server = "";
-
-                    if (settings is WebsiteSettings)
-                    {
-                        server = "webServer";
-                    }
-                    else
-                    {
-                        server = "ftpServer";
-                    }
-
-
-
                     //Authorization
                     var config = _Server.GetApplicationHostConfiguration();
-                    var authorization = config.GetSection("system." + server + "/security/authorization", settings.Name);
+
+                    var locationPath = site + appPath;
+                    var authorization = config.GetSection("system." + server + "/security/authorization", locationPath);
                     var authCollection = authorization.GetCollection();
 
                     var addElement = authCollection.CreateElement("add");
                     addElement.SetAttributeValue("accessType", "Allow");
 
-                    switch (settings.Authorization.AuthorizationType)
+                    switch (settings.AuthorizationType)
                     {
                         case AuthorizationType.AllUsers:
                             addElement.SetAttributeValue("users", "*");
+                            _Log.Information("Authorization for all users.");
                             break;
 
                         case AuthorizationType.SpecifiedUser:
-                            addElement.SetAttributeValue("users", string.Join(", ", settings.Authorization.Users));
+                            addElement.SetAttributeValue("users", string.Join(", ", settings.Users));
+                            _Log.Information("Authorization resticted to specific users {0}.", settings.Users);
                             break;
 
                         case AuthorizationType.SpecifiedRoleOrUserGroup:
-                            addElement.SetAttributeValue("roles", string.Join(", ", settings.Authorization.Roles));
+                            addElement.SetAttributeValue("roles", string.Join(", ", settings.Roles));
+                            _Log.Information("Authorization resticted to specific roles {0}.", settings.Roles);
                             break;
                     }
 
@@ -237,11 +233,11 @@ namespace Cake.IIS
                     //Permissions
                     var permissions = new List<string>();
 
-                    if (settings.Authorization.CanRead)
+                    if (settings.CanRead)
                     {
                         permissions.Add("Read");
                     }
-                    if (settings.Authorization.CanWrite)
+                    if (settings.CanWrite)
                     {
                         permissions.Add("Write");
                     }
@@ -250,8 +246,6 @@ namespace Cake.IIS
 
                     authCollection.Clear();
                     authCollection.Add(addElement);
-
-                    _Log.Information("Windows Authentication enabled: {0}", settings.Authentication.EnableWindowsAuthentication);
                 }
             }
 
@@ -533,20 +527,10 @@ namespace Cake.IIS
                         vDir.Path = settings.VirtualDirectory;
                         vDir.PhysicalPath = this.GetPhysicalDirectory(settings);
 
-                        if (!string.IsNullOrEmpty(settings.UserName))
-                        {
-                            if (string.IsNullOrEmpty(settings.Password))
-                            {
-                                throw new Exception("Invalid Virtual Directory User Account Password.");
-                            }
-                            else
-                            {
-                                vDir.UserName = settings.UserName;
-                                vDir.Password = settings.Password;
-                            }
-                        }
-
                         app.VirtualDirectories.Add(vDir);
+                    
+                        this.SetAuthentication("webServer", settings.SiteName, settings.ApplicationPath, settings.Authentication);
+                        this.SetAuthorization("webServer", settings.SiteName, settings.ApplicationPath, settings.Authorization);
                     }
 
                     site.Applications.Add(app);
@@ -580,16 +564,6 @@ namespace Cake.IIS
                 if (string.IsNullOrWhiteSpace(settings.ApplicationPath))
                 {
                     throw new ArgumentException("Applicaiton path cannot be null!");
-                }
-
-
-
-                //Get Pool
-                ApplicationPool appPool = _Server.ApplicationPools.SingleOrDefault(p => p.Name == settings.ApplicationPool);
-
-                if (appPool == null)
-                {
-                    throw new Exception("Application Pool '" + settings.ApplicationPool + "' does not exist.");
                 }
 
 

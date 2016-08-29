@@ -12,7 +12,7 @@
 
 
 
-namespace Cake.IIS.Tests.Utils
+namespace Cake.IIS.Tests
 {
     internal static class CakeHelper
     {
@@ -298,7 +298,6 @@ namespace Cake.IIS.Tests.Utils
                     return farms.FirstOrDefault(f => f.GetAttributeValue("name").ToString() == name);
                 }
             }
-
         #endregion
     }
 }

@@ -32,13 +32,13 @@ namespace Cake.IIS
 
 
 
-            public bool ServerAutoStart { get; set; }
-
             public ApplicationPoolSettings ApplicationPool { get; set; }
 
             public AuthenticationSettings Authentication { get; set; }
 
             public AuthorizationSettings Authorization { get; set; }
+
+
 
             public bool TraceFailedRequestsEnabled { get; set; }
 
@@ -47,6 +47,8 @@ namespace Cake.IIS
             public long TraceFailedRequestsMaxLogFiles { get; set; }
 
 
+        
+            public bool ServerAutoStart { get; set; }
 
             public bool Overwrite { get; set; }
         #endregion

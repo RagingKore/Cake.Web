@@ -136,10 +136,23 @@ Task("Website-Start")
 
 
 Task("Application-Create")
-    .Description("Starts a local Website")
+    .Description("Adds an application to a site")
     .Does(() =>
 {
     AddSiteApplication(new ApplicationSettings()
+    {
+        SiteName = "Default Website",
+
+        ApplicationPath = "/NestedApp",
+        PhysicalDirectory = "C:/Apps/KillerApp/"
+    });
+});
+
+Task("Application-Remove")
+    .Description("Remove an application from a site")
+    .Does(() =>
+{
+    RemoveSiteApplication(new ApplicationSettings()
     {
         SiteName = "Default Website",
 
