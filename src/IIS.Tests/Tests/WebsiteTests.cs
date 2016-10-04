@@ -25,7 +25,6 @@ namespace Cake.IIS.Tests
         }
 
         [Fact]
-<<<<<<< HEAD
         public void Should_Create_Website_With_Fluently_Defined_Binding()
         {
             // Arrange
@@ -92,8 +91,7 @@ namespace Cake.IIS.Tests
         }
 
         [Fact]
-=======
->>>>>>> origin/master
+
         public void Should_Delete_Website()
         {
             // Arrange

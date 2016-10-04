@@ -8,7 +8,7 @@ namespace Cake.IIS
     public class BindingSettings
     {
         /// <summary>
-        /// Creates new instance of <see cref="BindingSettingsBase"/>.
+        /// Creates new instance of <see cref="BindingSettings"/>.
         /// </summary>
         /// <param name="bindingProtocol">Binding type.</param>
         public BindingSettings(BindingProtocol bindingProtocol)

@@ -6,12 +6,7 @@
             public FtpsiteSettings()
                 : base()
             {
-<<<<<<< HEAD
                 this.Binding = IISBindings.Ftp;
-=======
-                this.BindingProtocol               = BindingProtocol.Ftp;
-                this.Port                          = 21;
->>>>>>> origin/master
             }
         #endregion
     }

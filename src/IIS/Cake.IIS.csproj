@@ -57,14 +57,10 @@
     <Compile Include="Manager\Types\ApplicationPoolManager.cs" />
     <Compile Include="Manager\Types\WebFarmManager.cs" />
     <Compile Include="Settings\ApplicationSettings.cs" />
-<<<<<<< HEAD
     <Compile Include="Bindings\BindingSettings.cs" />
     <Compile Include="Extensions\BindingExtensions.cs" />
     <Compile Include="Bindings\HostBindingSettings.cs" />
     <Compile Include="Bindings\PortBindingSettings.cs" />
-=======
-    <Compile Include="Settings\BindingSettings.cs" />
->>>>>>> origin/master
     <Compile Include="Settings\WebFarmSettings.cs" />
     <Compile Include="Types\IdentityType.cs" />
     <Compile Include="Settings\ApplicationPoolSettings.cs" />
@@ -91,7 +87,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

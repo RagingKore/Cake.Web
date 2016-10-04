@@ -1,4 +1,4 @@
-﻿namespace Cake.IIS.Settings.Bindings.FluentAPI
+﻿namespace Cake.IIS
 {
     /// <summary>
     /// Contains extension methods to configure bindings created by <see cref="BindingExtensions"/>

@@ -55,11 +55,6 @@ namespace Cake.IIS
                     throw new ArgumentException("Site name cannot be null!");
                 }
 
-                if (string.IsNullOrWhiteSpace(settings.HostName))
-                {
-                    throw new ArgumentException("Host name cannot be null!");
-                }
-
 
 
                 //Get Site
@@ -104,7 +99,6 @@ namespace Cake.IIS
                 //Site Settings
                 site = _Server.Sites.Add(
                     settings.Name,
-<<<<<<< HEAD
                     settings.Binding.BindingProtocol.ToString().ToLower(),
                     settings.Binding.BindingInformation,
                     this.GetPhysicalDirectory(settings));
@@ -117,20 +111,6 @@ namespace Cake.IIS
                 if (!String.IsNullOrEmpty(settings.Binding.CertificateStoreName))
                 {
                     site.Bindings[0].CertificateStoreName = settings.Binding.CertificateStoreName;
-=======
-                    settings.BindingProtocol.ToString().ToLower(),
-                    settings.BindingInformation,
-                    this.GetPhysicalDirectory(settings));
-
-                if (settings.CertificateHash != null)
-                {
-                    site.Bindings[0].CertificateHash = settings.CertificateHash;
-                }
-
-                if (!String.IsNullOrEmpty(settings.CertificateStoreName))
-                {
-                    site.Bindings[0].CertificateStoreName = settings.CertificateStoreName;
->>>>>>> origin/master
                 }
 
                 site.ServerAutoStart = settings.ServerAutoStart;
@@ -380,18 +360,14 @@ namespace Cake.IIS
             /// </summary>
             /// <param name="settings">The settings of the binding</param>
             /// <returns>If the binding was added.</returns>
-<<<<<<< HEAD
             public bool AddBinding(string siteName, BindingSettings settings)
-=======
-            public bool AddBinding(BindingSettings settings)
->>>>>>> origin/master
             {
                 if (settings == null)
                 {
                     throw new ArgumentNullException("settings");
                 }
 
-                if (string.IsNullOrWhiteSpace(settings.Name))
+                if (string.IsNullOrWhiteSpace(siteName))
                 {
                     throw new ArgumentException("Site name cannot be null!");
                 }
@@ -399,7 +375,7 @@ namespace Cake.IIS
 
 
                 //Get Site
-                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.Name);
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == siteName);
 
                 if (site != null)
                 {
@@ -434,7 +410,7 @@ namespace Cake.IIS
                 }
                 else
                 {
-                    throw new Exception("Site: " + settings.Name + " does not exist.");
+                    throw new Exception("Site: " + siteName+ " does not exist.");
                 }
             }
 
@@ -443,18 +419,14 @@ namespace Cake.IIS
             /// </summary>
             /// <param name="settings">The settings of the binding</param>
             /// <returns>If the binding was removed.</returns>
-<<<<<<< HEAD
             public bool RemoveBinding(string siteName, BindingSettings settings)
-=======
-            public bool RemoveBinding(BindingSettings settings)
->>>>>>> origin/master
             {
                 if (settings == null)
                 {
                     throw new ArgumentNullException("settings");
                 }
 
-                if (string.IsNullOrWhiteSpace(settings.Name))
+                if (string.IsNullOrWhiteSpace(siteName))
                 {
                     throw new ArgumentException("Site name cannot be null!");
                 }
@@ -462,7 +434,7 @@ namespace Cake.IIS
 
 
                 //Get Site
-                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.Name);
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == siteName);
 
                 if (site != null)
                 {
@@ -485,7 +457,7 @@ namespace Cake.IIS
                 }
                 else
                 {
-                    throw new Exception("Site: " + settings.Name + " does not exist.");
+                    throw new Exception("Site: " + siteName + " does not exist.");
                 }
             }
 

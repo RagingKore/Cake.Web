@@ -1,8 +1,9 @@
-﻿namespace Cake.IIS
+﻿using System;
+
+namespace Cake.IIS
 {
-    public enum BindingProtocol
+    public class BindingProtocol
     {
-<<<<<<< HEAD
         /// <value>
         /// <see cref="BindingProtocol"/> for <c>ftp</c> IIS binding type.
         /// </value>
@@ -76,10 +77,5 @@
         {
             return this.Name;
         }
-=======
-        Ftp,
-        Http,
-        Https
->>>>>>> origin/master
     }
 }
