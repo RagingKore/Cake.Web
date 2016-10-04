@@ -172,6 +172,8 @@ namespace Cake.IIS
                 }
             }
         }
+<<<<<<< HEAD
+=======
 
         /// <summary>
         /// Add site binding to local IIS.
@@ -286,5 +288,6 @@ namespace Cake.IIS
                     .RemoveApplication(settings);
             }
         }
+>>>>>>> origin/master
     }
 }

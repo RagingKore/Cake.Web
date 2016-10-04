@@ -49,13 +49,22 @@
   <ItemGroup>
     <Compile Include="Aliases\FtpsiteAliases.cs" />
     <Compile Include="Aliases\ApplicationPoolAliases.cs" />
+    <Compile Include="Aliases\BindingAliases.cs" />
+    <Compile Include="Aliases\ApplicationAliases.cs" />
     <Compile Include="Aliases\WebFarmAliases.cs" />
     <Compile Include="Interfaces\IDirectorySettings.cs" />
     <Compile Include="Manager\Base\BaseManager.cs" />
     <Compile Include="Manager\Types\ApplicationPoolManager.cs" />
     <Compile Include="Manager\Types\WebFarmManager.cs" />
     <Compile Include="Settings\ApplicationSettings.cs" />
+<<<<<<< HEAD
+    <Compile Include="Bindings\BindingSettings.cs" />
+    <Compile Include="Extensions\BindingExtensions.cs" />
+    <Compile Include="Bindings\HostBindingSettings.cs" />
+    <Compile Include="Bindings\PortBindingSettings.cs" />
+=======
     <Compile Include="Settings\BindingSettings.cs" />
+>>>>>>> origin/master
     <Compile Include="Settings\WebFarmSettings.cs" />
     <Compile Include="Types\IdentityType.cs" />
     <Compile Include="Settings\ApplicationPoolSettings.cs" />
@@ -76,6 +85,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Bindings\IISBindings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

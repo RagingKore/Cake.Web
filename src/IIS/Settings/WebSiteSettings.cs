@@ -6,8 +6,12 @@
             public WebsiteSettings()
                 : base()
             {
+<<<<<<< HEAD
+                Binding = IISBindings.Http;
+=======
                 this.BindingProtocol = BindingProtocol.Http;
                 this.Port = 80;
+>>>>>>> origin/master
             }
         #endregion
     }

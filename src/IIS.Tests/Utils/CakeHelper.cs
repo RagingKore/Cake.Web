@@ -102,6 +102,16 @@ namespace Cake.IIS.Tests
                     ServerAutoStart = true,
                     Overwrite = false
                 };
+<<<<<<< HEAD
+
+                websiteSettings.Binding = IISBindings.Http
+                    .SetHostName("superman.web")
+                    .SetIpAddress("*")
+                    .SetPort(80);
+
+                return websiteSettings;
+=======
+>>>>>>> origin/master
             }
 
             public static WebFarmSettings GetWebFarmSettings()

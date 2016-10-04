@@ -104,6 +104,20 @@ namespace Cake.IIS
                 //Site Settings
                 site = _Server.Sites.Add(
                     settings.Name,
+<<<<<<< HEAD
+                    settings.Binding.BindingProtocol.ToString().ToLower(),
+                    settings.Binding.BindingInformation,
+                    this.GetPhysicalDirectory(settings));
+
+                if (settings.Binding.CertificateHash != null)
+                {
+                    site.Bindings[0].CertificateHash = settings.Binding.CertificateHash;
+                }
+
+                if (!String.IsNullOrEmpty(settings.Binding.CertificateStoreName))
+                {
+                    site.Bindings[0].CertificateStoreName = settings.Binding.CertificateStoreName;
+=======
                     settings.BindingProtocol.ToString().ToLower(),
                     settings.BindingInformation,
                     this.GetPhysicalDirectory(settings));
@@ -116,6 +130,7 @@ namespace Cake.IIS
                 if (!String.IsNullOrEmpty(settings.CertificateStoreName))
                 {
                     site.Bindings[0].CertificateStoreName = settings.CertificateStoreName;
+>>>>>>> origin/master
                 }
 
                 site.ServerAutoStart = settings.ServerAutoStart;
@@ -365,7 +380,11 @@ namespace Cake.IIS
             /// </summary>
             /// <param name="settings">The settings of the binding</param>
             /// <returns>If the binding was added.</returns>
+<<<<<<< HEAD
+            public bool AddBinding(string siteName, BindingSettings settings)
+=======
             public bool AddBinding(BindingSettings settings)
+>>>>>>> origin/master
             {
                 if (settings == null)
                 {
@@ -424,7 +443,11 @@ namespace Cake.IIS
             /// </summary>
             /// <param name="settings">The settings of the binding</param>
             /// <returns>If the binding was removed.</returns>
+<<<<<<< HEAD
+            public bool RemoveBinding(string siteName, BindingSettings settings)
+=======
             public bool RemoveBinding(BindingSettings settings)
+>>>>>>> origin/master
             {
                 if (settings == null)
                 {

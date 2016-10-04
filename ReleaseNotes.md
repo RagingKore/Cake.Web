@@ -1,3 +1,6 @@
+### New in 0.1.7 (Released 2016/10/04)
+* New binding formats
+
 ### New in 0.1.6 (Released 2016/08/29)
 * Standardised application authorization / authentication
 
