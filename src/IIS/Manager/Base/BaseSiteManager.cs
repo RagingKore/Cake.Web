@@ -2,6 +2,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading;
 
     using Cake.Core;
@@ -102,6 +103,12 @@ namespace Cake.IIS
                     settings.Binding.BindingProtocol.ToString().ToLower(),
                     settings.Binding.BindingInformation,
                     this.GetPhysicalDirectory(settings));
+
+                if (!String.IsNullOrEmpty(settings.AlternateEnabledProtocols))
+                {
+                    site.ApplicationDefaults.EnabledProtocols = settings.AlternateEnabledProtocols;
+                }
+
 
                 if (settings.Binding.CertificateHash != null)
                 {
@@ -515,6 +522,10 @@ namespace Cake.IIS
                         app.Path = settings.ApplicationPath;
                         app.ApplicationPoolName = settings.ApplicationPool;
 
+                        if (!String.IsNullOrEmpty(settings.AlternateEnabledProtocols))
+                        {
+                            app.EnabledProtocols = settings.AlternateEnabledProtocols;
+                        }
 
 
                         //Get Directory

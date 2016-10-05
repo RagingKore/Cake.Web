@@ -79,6 +79,7 @@
     <Compile Include="Tests\ApplicationPoolTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\BindingTests.cs" />
+    <Compile Include="Tests\ApplicationTests.cs" />
     <Compile Include="Tests\WebFarmTests.cs" />
     <Compile Include="Utils\DebugLog.cs" />
     <Compile Include="Utils\CakeHelper.cs" />

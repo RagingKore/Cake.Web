@@ -1,4 +1,5 @@
 ﻿#region Using Statements
+    using System.Collections.Generic;
     using Cake.Core.IO;
 #endregion
 
@@ -35,6 +36,8 @@ namespace Cake.IIS
             public DirectoryPath PhysicalDirectory { get; set; }
 
             public BindingSettings Binding { get; set; }
+
+            public string AlternateEnabledProtocols { get; set; }
 
             public ApplicationPoolSettings ApplicationPool { get; set; }
 

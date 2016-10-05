@@ -1,5 +1,6 @@
 #region Using Statements
     using System;
+    using System.Collections.Generic;
     using Cake.Core.IO;
 #endregion
 
@@ -47,6 +48,7 @@ namespace Cake.IIS
 
             public AuthorizationSettings Authorization { get; set; }
 
+            public string AlternateEnabledProtocols { get; set; }
 
 
             [Obsolete("Use Authentication.UserName")]
