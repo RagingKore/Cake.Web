@@ -29,6 +29,8 @@ Cake-Build addin that extends Cake with IIS extensions
 * Start Site
 * Stop Site
 * Site Exists
+* Add site binding
+* Remove site binding
 * Create Application Pool
 * Delete Pool
 * Start Pool
@@ -131,6 +133,37 @@ Task("Website-Start")
     .Does(() =>
 {
     StartSite("MyBlog");
+});
+
+
+
+Task("Binding-Add")
+    .Description("Adds a binding to a website")
+    .Does(() =>
+{
+    AddBinding("MyBlog", new BindingSettings(BindingProtocol.Http)
+    {
+        HostName = "myblog.com"
+    });
+});
+
+Task("Binding-Add-Fluent")
+    .Description("Adds a binding to a website using a fluent interface")
+    .Does(() =>
+{
+    AddBinding("remote-server-name", "MyBlog", IISBindings.Http
+                                                .SetIpAddress("127.0.0.1")
+                                                .SetPort(8080));
+});
+
+Task("Binding-Remove")
+    .Description("Removes a binding from a website")
+    .Does(() =>
+{
+    RemoveBinding("remote-server-name", "MyBlog", new BindingSettings(BindingProtocol.Http)
+    {
+        HostName = "myblog.com"
+    });
 });
 
 

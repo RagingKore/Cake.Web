@@ -7,6 +7,15 @@ namespace Cake.IIS
     /// </summary>
     public class BindingSettings
     {
+        #region Constructor (2)
+        /// <summary>
+        /// Creates new instance of <see cref="BindingSettings"/>.
+        /// </summary>
+        public BindingSettings()
+        {
+
+        }
+
         /// <summary>
         /// Creates new instance of <see cref="BindingSettings"/>.
         /// </summary>
@@ -14,10 +23,16 @@ namespace Cake.IIS
         public BindingSettings(BindingProtocol bindingProtocol)
         {
             this.BindingProtocol = bindingProtocol;
+
+            IISBindings.Http.SetIpAddress("127.0.0.1").SetPort(8080)
         }
+        #endregion
 
 
 
+
+
+        #region Properties (7)
         /// <summary>
         /// Gets or sets IP Address
         /// </summary>
@@ -56,7 +71,7 @@ namespace Cake.IIS
         /// Returns <see cref="BindingProtocol"/> which will be used to determine IIS binding type.
         /// </returns>
         public BindingProtocol BindingProtocol { get; set; }
-
+        
 
 
         // <summary>
@@ -72,5 +87,6 @@ namespace Cake.IIS
                 return string.Format(@"{0}:{1}:{2}", IpAddress, Port, HostName);
             }
         }
+        #endregion
     }
 }
