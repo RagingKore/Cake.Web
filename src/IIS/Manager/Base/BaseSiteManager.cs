@@ -588,6 +588,44 @@ namespace Cake.IIS
                     throw new Exception("Site '" + settings.SiteName + "' does not exist.");
                 }
             }
+            /// <summary>
+            /// Checks if a virtual application exists in a IIS site
+            /// </summary>
+            /// <param name="settings">The settings of the application to remove</param>
+            /// <returns>If the application was removed.</returns>
+            public bool ApplicationExists(ApplicationSettings settings)
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException("settings");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.SiteName))
+                {
+                    throw new ArgumentException("Site name cannot be null!");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.ApplicationPath))
+                {
+                    throw new ArgumentException("Applicaiton path cannot be null!");
+                }
+
+
+
+                //Get Site
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
+
+                if (site != null)
+                {
+                    //Get Application
+                    return site.Applications.Any(p => p.Path == settings.ApplicationPath);
+                }
+                else
+                {
+                    throw new Exception("Site '" + settings.SiteName + "' does not exist.");
+                }
+            }
+
         #endregion
     }
 }
