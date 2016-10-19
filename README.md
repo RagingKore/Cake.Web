@@ -221,6 +221,39 @@ Task("WebFarm-Server-Unavailable")
     SetServerUnavailable("remote-server-name", "Batman", "Gotham");
 });
 
+Task("VirtualDirectory-Create")
+    .Description("Creates a Virtual Directory")
+    .Does(() => 
+{
+    AddSiteVirtualDirectory("remote-server-name", new VirtualDirectorySettings(){
+        PhysicalDirectory = "C:/Apps/Directory/",
+        SiteName = "Default Website",
+        ApplicationPath = "/",
+        Path = "/Directory"
+    });
+});
+
+Task("VirtualDirectory-Remove")
+    .Description("Removes a Virtual Directory")
+    .Does(() => 
+{
+    RemoveSiteVirtualDirectory("remote-server-name", new VirtualDirectorySettings(){
+        SiteName = "Default Website",
+        ApplicationPath = "/",
+        Path = "/Directory"
+    });
+});
+
+Task("VirtualDirectory-Exists")
+    .Description("Checks if a Virtual Directory exists")
+    .Does(() => 
+{
+    SiteVirtualDirectoryExists("remote-server-name", new VirtualDirectorySettings(){
+        SiteName = "Default Website",
+        ApplicationPath = "/",
+        Path = "/Directory"
+    });
+});
 RunTarget("Website-Create");
 ```
 

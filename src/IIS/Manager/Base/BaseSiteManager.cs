@@ -640,19 +640,19 @@ namespace Cake.IIS
 
                 app.VirtualDirectories.Add(vDir);
 
-                this.SetAuthentication("webServer", settings.SiteName, settings.ApplicationPath, settings.Authentication);
-                this.SetAuthorization("webServer", settings.SiteName, settings.ApplicationPath, settings.Authorization);
+                //this.SetAuthentication("webServer", settings.SiteName, settings.ApplicationPath, settings.Authentication);
+                //this.SetAuthorization("webServer", settings.SiteName, settings.ApplicationPath, settings.Authorization);
                             
                 _Server.CommitChanges();
 
                 return true;
             }
-        /// <summary>
-        /// Removes a virtual directory from a IIS site
-        /// </summary>
-        /// <param name="settings">The settings of the virtual directory to remove</param>
-        /// <returns>If the virtual directory was removed.</returns>
-        public bool RemoveVirtualDirectory(VirtualDirectorySettings settings)
+            /// <summary>
+            /// Removes a virtual directory from a IIS site
+            /// </summary>
+            /// <param name="settings">The settings of the virtual directory to remove</param>
+            /// <returns>If the virtual directory was removed.</returns>
+            public bool RemoveVirtualDirectory(VirtualDirectorySettings settings)
             {
                 if (settings == null)
                 {
