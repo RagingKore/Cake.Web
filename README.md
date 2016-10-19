@@ -49,6 +49,9 @@ Cake-Build addin that extends Cake with IIS extensions
 * Set server Unavailable
 * Is server Healthy
 * Get server State
+* Create Virtual Directory
+* Delete Virtual Directory
+* Virtual Directory Exists
 
 
 
