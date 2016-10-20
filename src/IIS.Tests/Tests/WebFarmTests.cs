@@ -9,7 +9,7 @@ namespace Cake.IIS.Tests
 {
     public class WebFarmTests
     {
-        [Fact(Skip = "Skip on AppVeyor")]
+        [Fact]
         public void Should_Create_WebFarm()
         {
             // Arrange
@@ -24,7 +24,7 @@ namespace Cake.IIS.Tests
             Assert.NotNull(CakeHelper.GetWebFarm(settings.Name));
         }
 
-        [Fact(Skip = "Skip on AppVeyor")]
+        [Fact]
         public void Should_Delete_WebFarm()
         {
             // Arrange
@@ -40,7 +40,7 @@ namespace Cake.IIS.Tests
 
 
 
-        [Fact(Skip = "Skip on AppVeyor")]
+        [Fact]
         public void Should_Set_Server_Available()
         {
             // Arrange
@@ -55,7 +55,7 @@ namespace Cake.IIS.Tests
             Assert.True(manager.GetServerState(settings.Name, settings.Servers[0]) == "Avaiable");
         }
 
-        [Fact(Skip = "Skip on AppVeyor")]
+        [Fact]
         public void Should_Set_Server_Unavailable()
         {
             // Arrange
