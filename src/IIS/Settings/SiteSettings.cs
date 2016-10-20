@@ -1,5 +1,4 @@
 ﻿#region Using Statements
-    using System.Collections.Generic;
     using Cake.Core.IO;
 #endregion
 
