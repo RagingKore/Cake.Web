@@ -1,4 +1,9 @@
-﻿using Xunit;
+﻿#region Using Statements
+    using Microsoft.Web.Administration;
+    using Xunit;
+#endregion
+
+
 
 namespace Cake.IIS.Tests
 {

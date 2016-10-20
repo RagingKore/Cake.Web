@@ -1,5 +1,4 @@
 ﻿#region Using Statements
-    using Cake.IIS.Tests;
     using Microsoft.Web.Administration;
     using Xunit;
 #endregion
