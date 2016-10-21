@@ -23,8 +23,6 @@ namespace Cake.IIS
         public BindingSettings(BindingProtocol bindingProtocol)
         {
             this.BindingProtocol = bindingProtocol;
-
-            IISBindings.Http.SetIpAddress("127.0.0.1").SetPort(8080);
         }
         #endregion
 
