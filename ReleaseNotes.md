@@ -1,3 +1,6 @@
+### New in 0.1.8 (Released 2016/10/20)
+* Fix unit-tests and circular reference in Bindings
+
 ### New in 0.1.7 (Released 2016/10/04)
 * New binding formats
 

@@ -1,7 +1,9 @@
-﻿using Cake.IIS.Settings;
-using Cake.IIS.Settings.Bindings;
-using Cake.IIS.Settings.Bindings.FluentAPI;
-using Xunit;
+﻿#region Using Statements
+    using Microsoft.Web.Administration;
+    using Xunit;
+#endregion
+
+
 
 namespace Cake.IIS.Tests
 {
@@ -13,6 +15,7 @@ namespace Cake.IIS.Tests
             // Arrange
             var settings = CreateWebSite();
             var bindingSettings = IISBindings.Ftp;
+
             // Act
             Act(settings.Name, bindingSettings);
 
