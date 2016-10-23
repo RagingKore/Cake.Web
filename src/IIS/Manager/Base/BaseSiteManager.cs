@@ -103,6 +103,12 @@ namespace Cake.IIS
                     settings.Binding.BindingInformation,
                     this.GetPhysicalDirectory(settings));
 
+                if (!String.IsNullOrEmpty(settings.AlternateEnabledProtocols))
+                {
+                    site.ApplicationDefaults.EnabledProtocols = settings.AlternateEnabledProtocols;
+                }
+
+
                 if (settings.Binding.CertificateHash != null)
                 {
                     site.Bindings[0].CertificateHash = settings.Binding.CertificateHash;
@@ -515,6 +521,10 @@ namespace Cake.IIS
                         app.Path = settings.ApplicationPath;
                         app.ApplicationPoolName = settings.ApplicationPool;
 
+                        if (!String.IsNullOrEmpty(settings.AlternateEnabledProtocols))
+                        {
+                            app.EnabledProtocols = settings.AlternateEnabledProtocols;
+                        }
 
 
                         //Get Directory

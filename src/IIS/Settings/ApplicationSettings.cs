@@ -47,6 +47,7 @@ namespace Cake.IIS
 
             public AuthorizationSettings Authorization { get; set; }
 
+            public string AlternateEnabledProtocols { get; set; }
 
 
             [Obsolete("Use Authentication.UserName")]

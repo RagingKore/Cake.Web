@@ -1,4 +1,5 @@
 ﻿#region Using Statements
+    using System;
     using Microsoft.Web.Administration;
     using Xunit;
 #endregion
@@ -91,7 +92,32 @@ namespace Cake.IIS.Tests
         }
 
         [Fact]
+        public void Should_Create_Website_With_Predefined_EnabledProtocols()
+        {
+            // Arrange
+            var settings = CakeHelper.GetWebsiteSettings();
+            settings.AlternateEnabledProtocols = "http,net.msmq,net.tcp";
+            CakeHelper.DeleteWebsite(settings.Name);
 
+            // Act
+            WebsiteManager manager = CakeHelper.CreateWebsiteManager();
+            manager.Create(settings);
+
+            // Assert
+            var website = CakeHelper.GetWebsite(settings.Name);
+            Assert.NotNull(website);
+            Assert.Contains(BindingProtocol.Http.ToString(), 
+                website.ApplicationDefaults.EnabledProtocols, 
+                StringComparison.OrdinalIgnoreCase);
+            Assert.Contains(BindingProtocol.NetMsmq.ToString(), 
+                website.ApplicationDefaults.EnabledProtocols, 
+                StringComparison.OrdinalIgnoreCase);
+            Assert.Contains(BindingProtocol.NetTcp.ToString(), 
+                website.ApplicationDefaults.EnabledProtocols, 
+                StringComparison.OrdinalIgnoreCase);
+        }
+
+        [Fact]
         public void Should_Delete_Website()
         {
             // Arrange
