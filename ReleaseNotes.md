@@ -1,3 +1,7 @@
+### New in 0.1.9 (Released 2016/10/23)
+* Configure enabled protocols
+* Virtual directory support
+
 ### New in 0.1.8 (Released 2016/10/20)
 * Fix unit-tests and circular reference in Bindings
 
