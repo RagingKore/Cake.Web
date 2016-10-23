@@ -51,6 +51,7 @@
     <Compile Include="Aliases\ApplicationPoolAliases.cs" />
     <Compile Include="Aliases\BindingAliases.cs" />
     <Compile Include="Aliases\ApplicationAliases.cs" />
+    <Compile Include="Aliases\VirtualDirectoryAliases.cs" />
     <Compile Include="Aliases\WebFarmAliases.cs" />
     <Compile Include="Interfaces\IDirectorySettings.cs" />
     <Compile Include="Manager\Base\BaseManager.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Extensions\BindingExtensions.cs" />
     <Compile Include="Bindings\HostBindingSettings.cs" />
     <Compile Include="Bindings\PortBindingSettings.cs" />
+    <Compile Include="Settings\VirtualDirectorySettings.cs" />
     <Compile Include="Settings\WebFarmSettings.cs" />
     <Compile Include="Types\IdentityType.cs" />
     <Compile Include="Settings\ApplicationPoolSettings.cs" />
