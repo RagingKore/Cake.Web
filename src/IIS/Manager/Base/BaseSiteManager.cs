@@ -799,7 +799,7 @@ namespace Cake.IIS
                 }
                 else
                 {
-                    throw new Exception("Site '" settings.SiteName "' does not exist.");
+                    throw new Exception("Site '" + settings.SiteName + "' does not exist.");
                 }
             }
 
