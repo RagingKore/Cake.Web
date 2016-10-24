@@ -73,5 +73,33 @@ namespace Cake.IIS
                     .RemoveApplication(settings);
             }
         }
+
+        /// <summary>
+        /// Checks if site application exists in local IIS.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="settings">The site application settings.</param>
+        [CakeMethodAlias]
+        public static void SiteApplicationExists(this ICakeContext context, ApplicationSettings settings)
+        {
+            context.SiteApplicationExists("", settings);
+        }
+
+        /// <summary>
+        /// Checks if site application exists in remote IIS.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="server">The remote server name.</param>
+        /// <param name="settings">The site application settings.</param>
+        [CakeMethodAlias]
+        public static bool SiteApplicationExists(this ICakeContext context, string server, ApplicationSettings settings)
+        {
+            using (ServerManager manager = BaseManager.Connect(server))
+            {
+                return WebsiteManager
+                    .Using(context.Environment, context.Log, manager)
+                    .ApplicationExists(settings);
+            }
+        }
     }
 }
