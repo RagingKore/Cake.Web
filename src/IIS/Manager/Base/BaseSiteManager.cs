@@ -103,6 +103,12 @@ namespace Cake.IIS
                     settings.Binding.BindingInformation,
                     this.GetPhysicalDirectory(settings));
 
+                if (!String.IsNullOrEmpty(settings.AlternateEnabledProtocols))
+                {
+                    site.ApplicationDefaults.EnabledProtocols = settings.AlternateEnabledProtocols;
+                }
+
+
                 if (settings.Binding.CertificateHash != null)
                 {
                     site.Bindings[0].CertificateHash = settings.Binding.CertificateHash;
@@ -515,6 +521,10 @@ namespace Cake.IIS
                         app.Path = settings.ApplicationPath;
                         app.ApplicationPoolName = settings.ApplicationPool;
 
+                        if (!String.IsNullOrEmpty(settings.AlternateEnabledProtocols))
+                        {
+                            app.EnabledProtocols = settings.AlternateEnabledProtocols;
+                        }
 
 
                         //Get Directory
@@ -588,6 +598,173 @@ namespace Cake.IIS
                     throw new Exception("Site '" + settings.SiteName + "' does not exist.");
                 }
             }
+
+
+            /// <summary>
+            /// Adds a virtual directory to a IIS site
+            /// </summary>
+            /// <param name="settings">The settings of the virtual directory to add</param>
+            /// <returns>If the virtual directory was added.</returns>
+            public bool AddVirtualDirectory(VirtualDirectorySettings settings)
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException("settings");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.Path))
+                {
+                    throw new ArgumentException("Site name cannot be null!");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.ApplicationPath))
+                {
+                    throw new ArgumentException("Applicaiton path cannot be null!");
+                }
+                
+
+                //Get Site
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
+
+                if (site == null)
+                {
+                    throw new Exception("Site '" + settings.SiteName + "' does not exist.");
+                }
+                //Get Application
+                Application app = site.Applications.SingleOrDefault(p => p.Path == settings.ApplicationPath);
+
+                if (app == null)
+                {
+                    throw new Exception("Application '" + settings.ApplicationPath + "' does not exist.");
+                }
+
+                if(app.VirtualDirectories.Any(vd => vd.Path == settings.Path))
+                {
+                    throw new Exception("Virtual Directory '" + settings.Path + "' already exists.");
+                }
+                
+                //Get Directory
+                VirtualDirectory vDir = app.VirtualDirectories.CreateElement();
+                vDir.Path = settings.Path;
+                vDir.PhysicalPath = this.GetPhysicalDirectory(settings);
+
+                app.VirtualDirectories.Add(vDir);
+
+                //this.SetAuthentication("webServer", settings.SiteName, settings.ApplicationPath, settings.Authentication);
+                //this.SetAuthorization("webServer", settings.SiteName, settings.ApplicationPath, settings.Authorization);
+                            
+                _Server.CommitChanges();
+
+                return true;
+            }
+            /// <summary>
+            /// Removes a virtual directory from a IIS site
+            /// </summary>
+            /// <param name="settings">The settings of the virtual directory to remove</param>
+            /// <returns>If the virtual directory was removed.</returns>
+            public bool RemoveVirtualDirectory(VirtualDirectorySettings settings)
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException("settings");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.SiteName))
+                {
+                    throw new ArgumentException("Site name cannot be null!");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.ApplicationPath))
+                {
+                    throw new ArgumentException("Applicaiton path cannot be null!");
+                }
+
+
+
+                //Get Site
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
+
+                if (site != null)
+                {
+                    //Get Application
+                    Application app = site.Applications.SingleOrDefault(p => p.Path == settings.ApplicationPath);
+
+                    if (app == null)
+                    {
+                        throw new Exception("Application '" + settings.ApplicationPath + "' does not exist.");
+                    }
+                    else
+                    {
+
+                        VirtualDirectory vd = app.VirtualDirectories.FirstOrDefault(p => p.Path == settings.Path);
+                        if (vd == null)
+                        {
+                            throw new Exception("Virtual directory '" + settings.Path + "' does not exist.");
+                        }
+                        else
+                        {
+                            app.VirtualDirectories.Remove(vd);
+                            _Server.CommitChanges();
+
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception("Site '" + settings.SiteName + "' does not exist.");
+                }
+            }
+
+            /// <summary>
+            /// Checks if a virtual directory exists in a IIS site
+            /// </summary>
+            /// <param name="settings">The settings of the virtual directory to check</param>
+            /// <returns>If the virtual directory exists.</returns>
+            public bool VirtualDirectoryExists(VirtualDirectorySettings settings)
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException("settings");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.SiteName))
+                {
+                    throw new ArgumentException("Site name cannot be null!");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.ApplicationPath))
+                {
+                    throw new ArgumentException("Applicaiton path cannot be null!");
+                }
+
+
+
+                //Get Site
+                Site site = _Server.Sites.SingleOrDefault(p => p.Name == settings.SiteName);
+
+                if (site != null)
+                {
+                    //Get Application
+                    Application app = site.Applications.SingleOrDefault(p => p.Path == settings.ApplicationPath);
+
+                    if (app == null)
+                    {
+                        throw new Exception("Application '" + settings.ApplicationPath + "' does not exist.");
+                    }
+                    else
+                    {
+
+                        VirtualDirectory vd = app.VirtualDirectories.FirstOrDefault(p => p.Path == settings.Path);
+                        return vd != null;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Site '" + settings.SiteName + "' does not exist.");
+                }
+            }
+
             /// <summary>
             /// Checks if a virtual application exists in a IIS site
             /// </summary>
@@ -622,7 +799,7 @@ namespace Cake.IIS
                 }
                 else
                 {
-                    throw new Exception("Site '" + settings.SiteName + "' does not exist.");
+                    throw new Exception("Site '" settings.SiteName "' does not exist.");
                 }
             }
 

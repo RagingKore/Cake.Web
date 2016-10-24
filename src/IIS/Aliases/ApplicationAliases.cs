@@ -82,7 +82,7 @@ namespace Cake.IIS
         [CakeMethodAlias]
         public static void SiteApplicationExists(this ICakeContext context, ApplicationSettings settings)
         {
-            context.RemoveSiteApplication("", settings);
+            context.SiteApplicationExists("", settings);
         }
 
         /// <summary>

@@ -36,6 +36,8 @@ namespace Cake.IIS
 
             public BindingSettings Binding { get; set; }
 
+            public string AlternateEnabledProtocols { get; set; }
+
             public ApplicationPoolSettings ApplicationPool { get; set; }
 
             public AuthenticationSettings Authentication { get; set; }

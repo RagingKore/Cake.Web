@@ -108,6 +108,18 @@ namespace Cake.IIS.Tests
                 return settings;
             }
 
+            public static ApplicationSettings GetApplicationSettings(string siteName)
+            {
+                return new ApplicationSettings
+                {
+                    ApplicationPath = "/Test",
+                    ApplicationPool = CakeHelper.GetAppPoolSettings().Name,
+                    VirtualDirectory = "/",
+                    PhysicalDirectory = "./Test/App/",
+                    SiteName = siteName,
+                };
+            }
+
             public static WebFarmSettings GetWebFarmSettings()
             {
                 return new WebFarmSettings
@@ -145,7 +157,22 @@ namespace Cake.IIS.Tests
             {
                 using (var serverManager = new ServerManager())
                 {
-                    return serverManager.Sites.FirstOrDefault(x => x.Name == name);
+                    var site = serverManager.Sites.FirstOrDefault(x => x.Name == name);
+                    // Below is required to fetch ApplicationDefaults before disposing ServerManager.
+                    if (site != null && site.ApplicationDefaults != null)
+                    {
+                        return site;
+                    }
+                    return site;
+                }
+            }
+
+            public static Application GetApplication(string siteName, string appPath)
+            {
+                using (var serverManager = new ServerManager())
+                {
+                    var site = serverManager.Sites.FirstOrDefault(x => x.Name == siteName) ;
+                    return site != null ? site.Applications.FirstOrDefault(a => a.Path == appPath) : null;
                 }
             }
 
