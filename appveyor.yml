@@ -1,0 +1,24 @@
+# Initalize
+init:
+  - git config --global core.autocrlf true
+
+# Install services
+services:
+  - iis
+
+# Install script
+install:
+    - cmd: powershell -NoProfile -ExecutionPolicy unrestricted -Command .\install.ps1
+
+# Build script
+build_script:
+  - cmd: powershell -NoProfile -ExecutionPolicy unrestricted -Command .\build.ps1 -Target "AppVeyor"
+
+# Test settings
+test: off
+
+# Branches whitelist
+branches:
+  only:
+    - master
+    - develop

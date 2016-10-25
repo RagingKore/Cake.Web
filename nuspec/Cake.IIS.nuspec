@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+      <id>Cake.IIS</id>
+      <version>0.0.0</version>
+      <authors>Sergio Silveira, Phillip Sharpe</authors>
+      <owners>Sergio Silveira, Phillip Sharpe</owners>
+      <title>Cake.IIS</title>
+      <description>Cake Build addon for IIS.</description>
+      <summary>IIS addon for cake build.</summary>
+      <licenseUrl>https://github.com/SharpeRAD/Cake.IIS/LICENSE</licenseUrl>
+      <projectUrl>https://github.com/SharpeRAD/Cake.IIS</projectUrl>
+      <iconUrl>https://raw.githubusercontent.com/cake-build/graphics/master/png/cake-medium.png</iconUrl>
+      <requireLicenseAcceptance>false</requireLicenseAcceptance>
+      <copyright>Copyright (c) Sergio Silveira, Phillip Sharpe 2015</copyright>
+      <releaseNotes>Initial Release</releaseNotes>
+      <tags>Cake Script Build IIS</tags>
+       
+       <dependencies>
+           <dependency id="Cake.Core" version="0.11.0" />
+       </dependencies>
+   </metadata>
+
+   <files>
+      <file src="Cake.IIS.dll" target="lib/net45" />
+      <file src="Cake.IIS.xml" target="lib/net45" />
+      <file src="Microsoft.Web.Administration.dll" target="lib/net45" />
+      <file src="LICENSE" />
+   </files>
+</package>
